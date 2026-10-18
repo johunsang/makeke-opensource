@@ -1,0 +1,42 @@
+name: Open-source source checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  source-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify publication guards
+        run: python3 -m unittest discover -s tests -p 'export_opensource_test.py' -v
+      - name: Check reviewed source for accidental credentials
+        run: python3 scripts/export-opensource.py --audit
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check desktop source syntax
+        run: |
+          node --check electron/main.js
+          node --check electron/preload.js
+          find static/modules -name '*.js' -print0 | xargs -0 -n1 node --check
+      - name: Verify account-free desktop
+        run: |
+          node tests/launcher-auth-contract.test.cjs
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: api/go.mod
+      - name: Test main API and local modules
+        run: |
+          for component in api modules/localhttp; do
+            (cd "$component" && go test ./...)
+          done
+

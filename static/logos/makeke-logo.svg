@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Makeke logo">
+  <rect width="128" height="128" rx="30" fill="#fffaf4"/>
+  <path d="M58 37c3-11 16-21 31-18-1 18-14 31-32 31 0 0-3-6 1-13Z" fill="url(#leaf)"/>
+  <path d="M63 29c4 10 4 20 0 30" fill="none" stroke="#2f9f3f" stroke-width="8" stroke-linecap="round"/>
+  <path d="M24 56c9-21 31-27 53-21 24 6 34 26 28 48-7 24-29 35-53 29-23-6-37-27-28-56Z" fill="url(#fruit)"/>
+  <path d="M39 57c7-9 19-13 32-10" fill="none" stroke="#ffd09a" stroke-width="9" stroke-linecap="round" opacity=".85"/>
+  <circle cx="85" cy="89" r="4" fill="#cc4b00" opacity=".36"/>
+  <circle cx="94" cy="82" r="3" fill="#cc4b00" opacity=".28"/>
+  <rect x="72" y="72" width="34" height="34" rx="11" fill="#fff" opacity=".94"/>
+  <text x="89" y="96" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif" font-size="21" font-weight="900" fill="#ff6b00">M</text>
+  <path d="M108 31l4 8 8 4-8 4-4 8-4-8-8-4 8-4 4-8Z" fill="#ff8c00" opacity=".85"/>
+  <defs>
+    <linearGradient id="fruit" x1="30" y1="40" x2="101" y2="107" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffb45c"/>
+      <stop offset=".5" stop-color="#ff8c00"/>
+      <stop offset="1" stop-color="#ff6b00"/>
+    </linearGradient>
+    <linearGradient id="leaf" x1="55" y1="49" x2="91" y2="18" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8bd64d"/>
+      <stop offset="1" stop-color="#2aa637"/>
+    </linearGradient>
+  </defs>
+</svg>

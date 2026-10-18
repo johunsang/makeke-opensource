@@ -1,0 +1,439 @@
+{
+  "version": 1,
+  "name": "makeke-shorts-semantic-default",
+  "description": "쇼츠 광고 만들기 기본 시맨틱 구조 팩. 이름, 주인공, 주제, 예외성, 장면, 감정, 오브젝트, 공간, 장르를 연결한다.",
+  "items": [
+    {
+      "kind": "structure",
+      "slug": "auto-semantic-graph",
+      "name": "AI가 시맨틱 구조 자동 선택",
+      "description": "브랜드명, 주인공, 주제, 예외성, 장면, 감정, 오브젝트, 공간, 장르 노드를 조합해 가장 강한 의미 연결을 고른다.",
+      "linked_slugs": ["hidden-friction", "wrong-hero", "one-second-accident", "relief-after-pressure", "brand-color-signal"],
+      "prompt": "AI가 업종 클리셰와 제품 진실을 비교한 뒤 하나의 의미망을 선택한다. 이름-주인공-주제-예외성-장면-감정-오브젝트가 서로 이유 있게 연결되어야 한다.",
+      "weight": 100
+    },
+    {
+      "kind": "structure",
+      "slug": "hidden-friction-rescue-graph",
+      "name": "숨은 불편 구출 구조",
+      "description": "말로 설명하기 어려운 작은 불편을 위기처럼 키우고, 제품/브랜드가 마지막 직전에 구출한다.",
+      "linked_slugs": ["hidden-friction", "relief-after-pressure", "one-second-accident", "rescue-moment", "brand-color-signal"],
+      "prompt": "고객이 참던 작은 불편을 첫 1초 사고로 보이고, 압박 뒤 안도로 이어지는 구출 서사를 만든다.",
+      "weight": 97
+    },
+    {
+      "kind": "structure",
+      "slug": "brand-name-spell-graph",
+      "name": "브랜드명이 세계 규칙을 바꾸는 구조",
+      "description": "브랜드명이 텍스트가 아니라 빛, 움직임, 물리 규칙, 주변 반응을 바꾸는 힘처럼 작동한다.",
+      "linked_slugs": ["brand-name-as-spell", "physics-break", "brand-color-signal", "status-shift", "surreal-metaphor"],
+      "prompt": "브랜드명은 마지막 텍스트로만 보이고, 앞 컷에서는 브랜드 색과 물리 변화가 이름의 의미를 예고한다.",
+      "weight": 95
+    },
+    {
+      "kind": "structure",
+      "slug": "wrong-hero-prop-graph",
+      "name": "예상 밖 주인공 구조",
+      "description": "사람 대신 소품, 제품, 손, 그림자, 공간이 주인공이 되어 카테고리 클리셰를 깬다.",
+      "linked_slugs": ["wrong-hero", "signature-prop", "object-hero", "forbidden-angle", "brand-name-hidden-clue"],
+      "prompt": "예상 밖 대상이 의지를 가진 듯 움직이며 문제를 발견하고 해결 방향으로 장면을 끌고 간다.",
+      "weight": 94
+    },
+    {
+      "kind": "structure",
+      "slug": "wrong-place-genre-graph",
+      "name": "카테고리 밖 장소 구조",
+      "description": "업종이 기대하는 공간 밖으로 문제를 옮기고, 낯선 장르 문법으로 의미를 선명하게 만든다.",
+      "linked_slugs": ["wrong-place", "category-wrong-room", "genre-invasion", "domestic-thriller", "hidden-friction"],
+      "prompt": "카테고리와 반대되는 장소에서 문제를 보여주고 낯선 장르 리듬으로 제품 진실을 더 또렷하게 만든다.",
+      "weight": 92
+    },
+    {
+      "kind": "structure",
+      "slug": "mystery-clue-reveal-graph",
+      "name": "숨은 단서 리빌 구조",
+      "description": "브랜드/제품 정체를 직접 말하지 않고 단서, 감정, 오브젝트를 쌓아 마지막에 의미가 열린다.",
+      "linked_slugs": ["brand-name-hidden-clue", "curiosity-gap", "mystery-reveal", "signature-prop", "wrong-time"],
+      "prompt": "정답을 늦게 공개하고 색, 소리, 손동작, 오브젝트 단서가 마지막 브랜드 의미로 모이게 한다.",
+      "weight": 91
+    },
+    {
+      "kind": "structure",
+      "slug": "public-judgement-graph",
+      "name": "선택지 공개 판정 구조",
+      "description": "제품 선택을 주변 반응, 스포츠 중계, 심판, 댓글 떡밥처럼 공개 판정 장면으로 만든다.",
+      "linked_slugs": ["reverse-role", "rival-duel", "sports-commentary", "before-after-judge", "comment-bait"],
+      "prompt": "고객이 조용히 비교하는 대신 장면 전체가 선택을 판정하고 시청자가 댓글로 끼어들고 싶게 만든다.",
+      "weight": 89
+    },
+    {
+      "kind": "success_formula",
+      "slug": "scroll-stop-irregularity",
+      "name": "스크롤 정지 이상 신호",
+      "description": "성공 쇼츠 광고는 첫 정지 프레임만 봐도 무슨 일인지 궁금해야 한다.",
+      "linked_slugs": ["one-second-accident", "purple-cow", "forbidden-angle", "curiosity-gap"],
+      "prompt": "첫 0.5~1초에 설명 없이 멈추게 하는 이상 신호를 만든다. 표정, 손동작, 위험해 보이는 소품, 말이 안 되는 공간, 불완전한 사건 중 하나가 보여야 한다.",
+      "weight": 100
+    },
+    {
+      "kind": "success_formula",
+      "slug": "emotion-switchback",
+      "name": "감정 급전환",
+      "description": "불안, 민망함, 긴장, 질투, 욕망, 안도 같은 감정이 짧은 컷 안에서 급격히 바뀐다.",
+      "linked_slugs": ["relief-after-pressure", "status-shift", "creator-reaction", "sensory-loop"],
+      "prompt": "기능 설명보다 감정의 방향 전환을 먼저 설계한다. 시청자가 '왜 저렇게 됐지?'에서 '나도 저 상황 알아'로 넘어가게 한다.",
+      "weight": 98
+    },
+    {
+      "kind": "success_formula",
+      "slug": "plausible-weirdness",
+      "name": "개연성 있는 이상함",
+      "description": "이상한 장면이 랜덤이 아니라 브랜드/상품/고객 문제에서 필연적으로 나온다.",
+      "linked_slugs": ["wrong-hero", "wrong-place", "brand-color-signal", "hidden-friction"],
+      "prompt": "낯선 장면을 만들되, 왜 이 브랜드라서 가능한지 한 문장으로 설명되는 연결을 반드시 둔다.",
+      "weight": 97
+    },
+    {
+      "kind": "success_formula",
+      "slug": "native-ad-disguise",
+      "name": "광고 아닌 척 사건",
+      "description": "로고 인트로나 제품 자랑 대신 실제 릴스/쇼츠처럼 보이는 사건, 실수, 반응, 목격담으로 시작한다.",
+      "linked_slugs": ["native-hook-shorts", "creator-reaction", "comment-bait", "customer-pov"],
+      "prompt": "첫 절반은 광고처럼 말하지 않는다. 실제로 벌어진 일, 관찰된 반응, 이상한 목격 장면처럼 보이게 한다.",
+      "weight": 96
+    },
+    {
+      "kind": "success_formula",
+      "slug": "product-truth-bridge",
+      "name": "제품 진실 다리",
+      "description": "재미있는 훅이 마지막에 제품의 진짜 가치로 건너갈 수 있어야 한다.",
+      "linked_slugs": ["status-shift", "brand-name-hidden-clue", "mystery-reveal", "proof-detail"],
+      "prompt": "훅, 감정, 오브젝트, 반전이 제품 기능/서비스 진실 하나로 수렴하게 만든다. 재미와 전환이 따로 놀면 실패다.",
+      "weight": 95
+    },
+    {
+      "kind": "success_formula",
+      "slug": "memory-anchor-loop",
+      "name": "기억 앵커 반복",
+      "description": "하나의 색, 소리, 손동작, 소품, 형태가 컷마다 변주되어 마지막 브랜드 기억으로 남는다.",
+      "linked_slugs": ["signature-prop", "brand-color-signal", "symbolic-anchor", "loop-twist"],
+      "prompt": "시청자가 광고명을 잊어도 하나의 소품/색/움직임은 기억하게 만든다. 마지막 브랜드는 그 앵커를 회수한다.",
+      "weight": 94
+    },
+    {
+      "kind": "success_formula",
+      "slug": "share-trigger-stepps",
+      "name": "공유 트리거",
+      "description": "소셜 화폐, 계기, 감정, 공개성, 실용성, 이야기 중 최소 2개가 자연스럽게 생긴다.",
+      "linked_slugs": ["comment-bait", "public-judgement-graph", "taboo-truth", "story-brain"],
+      "prompt": "시청자가 친구에게 보낼 이유를 만든다. '이거 너 같다', '이거 봤어?', '이 방식 써봐' 중 하나가 떠올라야 한다.",
+      "weight": 93
+    },
+    {
+      "kind": "success_formula",
+      "slug": "rhythm-escalation",
+      "name": "컷 리듬 상승",
+      "description": "정적인 장면 나열이 아니라 훅, 증폭, 반전, 증거, 해방, 브랜드 기억으로 컷의 에너지가 바뀐다.",
+      "linked_slugs": ["sound-hit-transition", "crash-zoom", "reaction-peak", "rescue-moment"],
+      "prompt": "모든 컷은 이전 컷보다 카메라, 감정, 정보, 소리 중 하나가 새로워야 한다. 같은 정면샷 반복은 실패다.",
+      "weight": 92
+    },
+    {
+      "kind": "creativity",
+      "slug": "ai-creative-auto",
+      "name": "AI가 창조성 자동 선택",
+      "description": "제품 진실과 가장 멀리 떨어진 의미를 AI가 골라 새 장면으로 연결한다.",
+      "linked_slugs": ["auto-semantic-graph", "hidden-friction", "wrong-hero", "curiosity-gap"],
+      "prompt": "AI가 카테고리에서 가장 익숙한 요소와 가장 낯선 요소를 하나씩 고르고, 둘 사이를 제품 진실로 연결한다.",
+      "weight": 100
+    },
+    {
+      "kind": "creativity",
+      "slug": "distant-association",
+      "name": "먼 의미 연결",
+      "description": "서로 멀리 떨어진 두 의미를 제품 진실로 연결해 예상 밖 장면을 만든다.",
+      "linked_slugs": ["wrong-place", "brand-name-as-spell", "category-wrong-room"],
+      "prompt": "업종과 멀리 떨어진 장소/오브젝트/장르를 하나 가져와 제품의 진짜 장점과 연결한다.",
+      "weight": 97
+    },
+    {
+      "kind": "creativity",
+      "slug": "constraint-inversion",
+      "name": "제약 뒤집기",
+      "description": "보통 광고가 피하는 제약을 오히려 연출 규칙으로 삼는다.",
+      "linked_slugs": ["silence-gap", "taboo-truth", "forbidden-angle"],
+      "prompt": "말하지 않기, 보여주지 않기, 움직이지 않기 같은 제약을 장면의 힘으로 바꾼다.",
+      "weight": 94
+    },
+    {
+      "kind": "creativity",
+      "slug": "sensory-transfer",
+      "name": "감각 전이",
+      "description": "속도, 편안함, 고급감 같은 추상 장점을 소리, 질감, 빛, 손동작으로 바꾼다.",
+      "linked_slugs": ["ritual-closeup", "sensory-loop", "brand-color-signal"],
+      "prompt": "추상 장점 하나를 시청자가 느낄 수 있는 감각 장면으로 번역한다.",
+      "weight": 92
+    },
+    {
+      "kind": "creativity",
+      "slug": "relationship-remix",
+      "name": "관계 재배치",
+      "description": "고객, 제품, 공간, 문제의 관계를 바꿔 새로운 긴장을 만든다.",
+      "linked_slugs": ["reverse-role", "wrong-hero", "customer-pov"],
+      "prompt": "고객이 제품을 쓰는 관계를 뒤집어 제품/공간/문제가 고객을 움직이게 만든다.",
+      "weight": 91
+    },
+    {
+      "kind": "creativity",
+      "slug": "symbolic-anchor",
+      "name": "상징 앵커",
+      "description": "반복되는 소품, 색, 소리, 손동작을 광고의 기억 중심으로 삼는다.",
+      "linked_slugs": ["signature-prop", "brand-color-signal", "brand-name-hidden-clue"],
+      "prompt": "하나의 상징 앵커를 모든 컷에 변주해 마지막 브랜드 기억으로 모이게 한다.",
+      "weight": 90
+    },
+    {
+      "kind": "creativity",
+      "slug": "paradox-proof",
+      "name": "역설 증명",
+      "description": "겉보기엔 모순처럼 보이는 장면이 제품 진실을 증명하게 만든다.",
+      "linked_slugs": ["myth-bust", "taboo-truth", "status-shift"],
+      "prompt": "처음엔 말이 안 되는 장면처럼 보이지만 끝나면 제품 가치가 더 선명해지는 역설을 만든다.",
+      "weight": 89
+    },
+    {
+      "kind": "creativity",
+      "slug": "genre-hybrid",
+      "name": "장르 합성",
+      "description": "제품 순간에 전혀 다른 장르 문법을 섞어 새로운 리듬을 만든다.",
+      "linked_slugs": ["genre-invasion", "sports-commentary", "domestic-thriller"],
+      "prompt": "평범한 사용 장면에 스포츠 중계, 스릴러, 로맨스, 요리 배틀 같은 장르 규칙을 하나만 섞는다.",
+      "weight": 88
+    },
+    {
+      "kind": "name",
+      "slug": "brand-name-as-spell",
+      "name": "브랜드명이 주문처럼 작동",
+      "description": "이름이 말로 설명되지 않고 장면의 규칙을 바꾸는 힘처럼 느껴진다.",
+      "linked_slugs": ["physics-break", "brand-color-signal"],
+      "prompt": "브랜드명을 화면 글자가 아니라 빛, 움직임, 반응의 규칙으로 느끼게 한다.",
+      "weight": 96
+    },
+    {
+      "kind": "name",
+      "slug": "brand-name-hidden-clue",
+      "name": "브랜드명이 숨은 단서",
+      "description": "마지막 전까지 이름을 직접 말하지 않고 색, 형태, 소리, 행동 단서로 쌓는다.",
+      "linked_slugs": ["mystery-reveal", "object-hero"],
+      "prompt": "브랜드 이름은 마지막에만 드러나고 앞 컷들은 이름의 감각 단서로 연결한다.",
+      "weight": 92
+    },
+    {
+      "kind": "persona",
+      "slug": "reluctant-expert",
+      "name": "마지못해 인정하는 전문가",
+      "description": "처음엔 의심하지만 결과를 보고 표정이 바뀌는 인물.",
+      "linked_slugs": ["myth-bust", "social-proof-docu"],
+      "prompt": "전문가가 과장 없이 의심에서 인정으로 변하는 장면을 만든다.",
+      "weight": 94
+    },
+    {
+      "kind": "persona",
+      "slug": "tiny-rebel",
+      "name": "작은 반항아",
+      "description": "큰 문제 앞에서 작고 엉뚱한 행동으로 판을 바꾸는 주인공.",
+      "linked_slugs": ["scale-break", "absurd-scale"],
+      "prompt": "작은 행동 하나가 거대한 문제를 뒤집는 쾌감을 만든다.",
+      "weight": 90
+    },
+    {
+      "kind": "topic",
+      "slug": "hidden-friction",
+      "name": "숨은 불편",
+      "description": "고객이 말로는 설명하지 않지만 매일 느끼는 작은 마찰.",
+      "linked_slugs": ["problem", "customer-pov"],
+      "prompt": "고객이 무심코 참는 불편을 몸짓과 표정으로 먼저 보여준다.",
+      "weight": 97
+    },
+    {
+      "kind": "topic",
+      "slug": "status-shift",
+      "name": "상태 변화",
+      "description": "사용 전후의 기능 차이가 아니라 사람의 태도와 공간 분위기가 바뀐다.",
+      "linked_slugs": ["transform", "story-brain"],
+      "prompt": "기능이 아니라 사람의 자세, 속도, 표정, 주변 반응이 바뀌게 한다.",
+      "weight": 91
+    },
+    {
+      "kind": "exception",
+      "slug": "wrong-hero",
+      "name": "주인공 예외",
+      "description": "사람이 아니라 제품, 소품, 그림자, 손, 공간이 주인공이 된다.",
+      "linked_slugs": ["object-hero", "brand-name-as-spell"],
+      "prompt": "가장 예상 밖 대상이 의지를 가진 듯 장면을 끌고 간다.",
+      "weight": 99
+    },
+    {
+      "kind": "exception",
+      "slug": "wrong-place",
+      "name": "장소 예외",
+      "description": "업종이 절대 가지 않을 것 같은 장소로 문제를 옮긴다.",
+      "linked_slugs": ["genre-invasion", "surreal-metaphor"],
+      "prompt": "카테고리와 반대되는 장소에서 제품 문제가 더 선명하게 보이게 한다.",
+      "weight": 94
+    },
+    {
+      "kind": "exception",
+      "slug": "wrong-time",
+      "name": "시간 예외",
+      "description": "결말을 먼저 보이거나 미래/과거를 오가며 이유를 추적한다.",
+      "linked_slugs": ["mystery-reveal", "micro-quest"],
+      "prompt": "끝 장면을 먼저 던지고 왜 그렇게 됐는지 역순으로 추적한다.",
+      "weight": 91
+    },
+    {
+      "kind": "exception",
+      "slug": "scale-break",
+      "name": "스케일 예외",
+      "description": "작은 문제를 거대하게, 큰 문제를 작게 다룬다.",
+      "linked_slugs": ["absurd-scale", "tiny-rebel"],
+      "prompt": "문제의 크기를 반대로 뒤틀어 웃음이나 긴장을 만든다.",
+      "weight": 93
+    },
+    {
+      "kind": "exception",
+      "slug": "physics-break",
+      "name": "물리법칙 예외",
+      "description": "중력, 빛, 속도, 공간이 제품 가치에 반응한다.",
+      "linked_slugs": ["surreal-metaphor", "brand-name-as-spell"],
+      "prompt": "제품 가치가 물리법칙을 바꾸는 것처럼 보이게 한다.",
+      "weight": 95
+    },
+    {
+      "kind": "exception",
+      "slug": "taboo-truth",
+      "name": "금기 진실 예외",
+      "description": "업계가 숨기는 불편한 진실을 안전하게 보여준다.",
+      "linked_slugs": ["taboo-reversal", "myth-bust"],
+      "prompt": "불편한 진실을 공격 없이 드러내고 제품의 태도로 회수한다.",
+      "weight": 89
+    },
+    {
+      "kind": "exception",
+      "slug": "reverse-role",
+      "name": "역할 반전 예외",
+      "description": "고객이 제품을 고르는 게 아니라 제품/공간이 고객을 시험한다.",
+      "linked_slugs": ["rival-duel", "comment-bait"],
+      "prompt": "선택의 주체를 뒤집어 시청자가 판정하고 싶게 만든다.",
+      "weight": 88
+    },
+    {
+      "kind": "exception",
+      "slug": "genre-invasion",
+      "name": "장르 침입 예외",
+      "description": "평범한 순간에 스릴러, 로맨스, 스포츠 중계, 요리 배틀 문법이 침입한다.",
+      "linked_slugs": ["pov-crisis", "comedy-twist"],
+      "prompt": "업종과 어울리지 않는 장르 문법을 한 장면에 침입시킨다.",
+      "weight": 92
+    },
+    {
+      "kind": "exception",
+      "slug": "silence-gap",
+      "name": "침묵/공백 예외",
+      "description": "시끄러운 숏폼 사이에서 정적과 멈춤으로 시선을 잡는다.",
+      "linked_slugs": ["sensory-loop", "cinematic-tension"],
+      "prompt": "순간적인 정적과 빈 공간 뒤에 강한 사운드/움직임을 터뜨린다.",
+      "weight": 86
+    },
+    {
+      "kind": "exception",
+      "slug": "forbidden-angle",
+      "name": "카메라 관점 예외",
+      "description": "서랍 속, 제품 표면, 손바닥, 천장, 거울, CCTV 같은 비정상 시점.",
+      "linked_slugs": ["pov-crisis", "object-hero"],
+      "prompt": "평범한 행동을 비정상 카메라 위치에서 봐서 새롭게 느끼게 한다.",
+      "weight": 90
+    },
+    {
+      "kind": "scene",
+      "slug": "one-second-accident",
+      "name": "1초 사고",
+      "description": "첫 프레임에서 아주 작은 사고가 터져 멈추게 한다.",
+      "linked_slugs": ["hidden-friction", "pov-crisis"],
+      "prompt": "첫 1초에 작은 사고나 오류가 화면 행동으로 보이게 한다.",
+      "weight": 98
+    },
+    {
+      "kind": "scene",
+      "slug": "ritual-closeup",
+      "name": "의식 클로즈업",
+      "description": "손동작, 질감, 소리, 반복 리듬으로 감각 몰입을 만든다.",
+      "linked_slugs": ["asmr-ritual", "sensory-loop"],
+      "prompt": "손과 질감, 소리의 반복 의식으로 제품을 기억하게 한다.",
+      "weight": 87
+    },
+    {
+      "kind": "emotion",
+      "slug": "relief-after-pressure",
+      "name": "압박 뒤 안도",
+      "description": "문제가 몰아붙인 뒤 표정이 풀리는 전환.",
+      "linked_slugs": ["hidden-friction", "rescue-moment"],
+      "prompt": "압박감에서 안도로 바뀌는 표정/호흡/공간 변화를 잡는다.",
+      "weight": 95
+    },
+    {
+      "kind": "emotion",
+      "slug": "curiosity-gap",
+      "name": "호기심 공백",
+      "description": "정체를 숨긴 단서가 쌓이고 마지막에 의미가 열린다.",
+      "linked_slugs": ["mystery-reveal", "brand-name-hidden-clue"],
+      "prompt": "정답을 늦게 공개하고 단서만 빠르게 쌓는다.",
+      "weight": 93
+    },
+    {
+      "kind": "object",
+      "slug": "brand-color-signal",
+      "name": "브랜드 컬러 신호",
+      "description": "브랜드 색이 문제를 정리하거나 분위기를 바꾸는 신호가 된다.",
+      "linked_slugs": ["brand-name-as-spell", "status-shift"],
+      "prompt": "브랜드 컬러를 장면 속 힘의 방향, 빛, 전환 신호로 사용한다.",
+      "weight": 90
+    },
+    {
+      "kind": "object",
+      "slug": "signature-prop",
+      "name": "시그니처 소품",
+      "description": "한 번 보면 기억나는 작은 소품이 모든 컷을 연결한다.",
+      "linked_slugs": ["object-hero", "wrong-hero"],
+      "prompt": "시그니처 소품을 반복 단서로 써서 컷들을 하나의 세계로 묶는다.",
+      "weight": 84
+    },
+    {
+      "kind": "location",
+      "slug": "category-wrong-room",
+      "name": "카테고리 밖 방",
+      "description": "업종과 맞지 않는 공간이 제품 문제를 더 선명하게 만든다.",
+      "linked_slugs": ["wrong-place", "genre-invasion"],
+      "prompt": "업종이 기대하는 공간과 반대되는 방에서 문제를 보여준다.",
+      "weight": 86
+    },
+    {
+      "kind": "genre",
+      "slug": "sports-commentary",
+      "name": "스포츠 중계 침입",
+      "description": "작은 선택을 결승전처럼 긴장감 있게 보여준다.",
+      "linked_slugs": ["genre-invasion", "before-after-judge"],
+      "prompt": "작은 제품 선택을 스포츠 판정/중계 리듬으로 만든다.",
+      "weight": 82
+    },
+    {
+      "kind": "genre",
+      "slug": "domestic-thriller",
+      "name": "생활 스릴러 침입",
+      "description": "일상 불편을 스릴러처럼 키우되 안전하게 회수한다.",
+      "linked_slugs": ["problem-thriller", "pov-crisis"],
+      "prompt": "생활 속 작은 불편을 과장된 스릴러 리듬으로 보여준다.",
+      "weight": 85
+    }
+  ]
+}

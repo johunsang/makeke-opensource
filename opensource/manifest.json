@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "description": "Reviewed source allowlist. Always export into a new directory without Git history.",
+  "root_files": [
+    "README.md",
+    "LICENSE",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "THIRD_PARTY_NOTICES.md",
+    "package.json",
+    "package-lock.json",
+    "config.example.ini",
+    "run-dev.bat"
+  ],
+  "source_trees": {
+    "api": [
+      ".go",
+      ".mod",
+      ".sum"
+    ],
+    "modules/localhttp": [
+      ".go",
+      ".mod",
+      ".sum"
+    ],
+    "electron": [
+      ".js",
+      ".png",
+      ".ico",
+      ".icns"
+    ],
+    "static": [
+      ".html",
+      ".css",
+      ".js",
+      ".svg",
+      ".png"
+    ],
+    "templates": [
+      ".html",
+      ".css",
+      ".js"
+    ],
+    "chrome-extension": [
+      ".html",
+      ".css",
+      ".js",
+      ".json",
+      ".png",
+      ".svg"
+    ],
+    "tests": [
+      ".go",
+      ".js",
+      ".cjs",
+      ".mjs",
+      ".py"
+    ],
+    "remotion-video": [
+      ".ts",
+      ".tsx",
+      ".json"
+    ]
+  },
+  "extra_files": [
+    "scripts/export-opensource.py",
+    "scripts/build.sh",
+    "scripts/build-win.sh",
+    "scripts/start_makeke.sh",
+    "scripts/install_ffmpeg_macos.sh",
+    "scripts/setup_bun.sh",
+    "scripts/setup_hyperframes.sh",
+    "scripts/langgraph_design_agent.mjs",
+    "build/entitlements.mac.plist",
+    "build/entitlements.mac.inherit.plist",
+    "data/animation_ad/semantic_pack.default.json",
+    "opensource/manifest.json",
+    ".github/workflows/opensource-ci.yml",
+    "docs/OPEN_SOURCE.md"
+  ],
+  "excluded_prefixes": [
+    "api/python/",
+    "electron/bin/",
+    "static/fonts/",
+    "static/vendor/",
+    "static/open-design/",
+    "static/data/",
+    "apps/",
+    "api/internal/xiaohongshu/",
+    "api/internal/httpserver/xiaohongshu",
+    "api/internal/httpserver/shorts_media"
+  ],
+  "excluded_files": [
+    "electron/launch-admin.js",
+    "static/admin.html",
+    "static/admin.js",
+    "static/landing.html",
+    "static/launcher.html",
+    "static/xiaohongshu.html",
+    "static/kekelink.html",
+    "static/logos/insight-logo.svg",
+    "static/logos/kekelink-logo.svg",
+    "static/logos/seller-booster-logo.svg",
+    "static/logos/shorts-captain-logo.svg",
+    "api/internal/httpserver/local_search_test.go"
+  ],
+  "required_files": [
+    "README.md",
+    "LICENSE",
+    "SECURITY.md",
+    "CONTRIBUTING.md",
+    "THIRD_PARTY_NOTICES.md",
+    "api/go.mod",
+    "api/cmd/makeke-server/main.go",
+    "electron/main.js",
+    "static/index.html",
+    "scripts/export-opensource.py",
+    "opensource/manifest.json"
+  ]
+}

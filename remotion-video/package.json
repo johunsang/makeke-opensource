@@ -1,0 +1,23 @@
+{
+  "name": "makeke-remotion",
+  "version": "1.0.0",
+  "description": "Remotion workspace for Makeke 모션 영상 에이전트",
+  "private": true,
+  "scripts": {
+    "preview": "remotion studio",
+    "render": "remotion render"
+  },
+  "dependencies": {
+    "@remotion/bundler": "^4.0.0",
+    "@remotion/cli": "^4.0.0",
+    "@remotion/renderer": "^4.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "remotion": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "typescript": "^5.4.0"
+  }
+}

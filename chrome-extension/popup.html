@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { width: 300px; font-family: -apple-system, 'Segoe UI', sans-serif; background: #1a1a2e; color: #e0e0e0; font-size: 13px; }
+.header { padding: 14px 16px; background: linear-gradient(135deg, #16213e, #1a1a2e); border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between; }
+.header h1 { font-size: 15px; font-weight: 700; color: #f5f5f7; }
+.status { font-size: 11px; padding: 3px 8px; border-radius: 10px; font-weight: 600; }
+.status.on { background: rgba(76,175,80,0.2); color: #4caf50; }
+.status.off { background: rgba(255,69,58,0.2); color: #ff453a; }
+.section { padding: 12px 16px; }
+.section-title { font-size: 11px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; font-weight: 600; }
+.btn { display: block; width: 100%; padding: 10px 14px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; margin-bottom: 6px; text-align: left; transition: all 0.15s; }
+.btn-connect { background: rgba(76,175,80,0.15); color: #4caf50; }
+.btn-connect:hover { background: rgba(76,175,80,0.25); }
+.btn-disconnect { background: rgba(255,69,58,0.15); color: #ff453a; }
+.btn-disconnect:hover { background: rgba(255,69,58,0.25); }
+.btn-exclude { background: rgba(255,159,10,0.12); color: #ff9f0a; }
+.btn-exclude:hover { background: rgba(255,159,10,0.22); }
+.btn-include { background: rgba(91,155,245,0.12); color: #5b9bf5; }
+.btn-include:hover { background: rgba(91,155,245,0.22); }
+.divider { height: 1px; background: rgba(255,255,255,0.06); margin: 4px 0; }
+.site-info { padding: 8px 12px; background: rgba(255,255,255,0.04); border-radius: 8px; margin-bottom: 10px; font-size: 12px; color: rgba(255,255,255,0.5); word-break: break-all; }
+.excluded-list { max-height: 180px; overflow-y: auto; }
+.excluded-item { display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; border-radius: 6px; margin-bottom: 4px; background: rgba(255,255,255,0.03); }
+.excluded-item .domain { font-size: 12px; color: rgba(255,255,255,0.6); }
+.excluded-item .remove-btn { background: none; border: none; color: #ff453a; cursor: pointer; font-size: 16px; padding: 0 4px; font-weight: 700; }
+.excluded-item .remove-btn:hover { color: #ff6b6b; }
+.empty { text-align: center; padding: 16px; color: rgba(255,255,255,0.2); font-size: 12px; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>마케케</h1>
+    <span class="status off" id="conn-status">연결 안됨</span>
+  </div>
+
+  <div class="section">
+    <button class="btn btn-connect" id="btn-toggle">서버 연결</button>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-title">현재 사이트</div>
+    <div class="site-info" id="current-site">로딩 중...</div>
+    <button class="btn btn-exclude" id="btn-exclude">이 사이트 제외하기</button>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-title">제외된 사이트</div>
+    <div class="excluded-list" id="excluded-list">
+      <div class="empty">제외된 사이트가 없습니다</div>
+    </div>
+  </div>
+
+<script src="popup.js"></script>
+</body>
+</html>

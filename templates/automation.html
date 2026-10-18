@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마케케 업무 자동화</title>
+    <style>
+        :root {
+            --accent: #ff8c00;
+            --accent-dark: #ff6b00;
+            --accent-light: #fbbf24;
+            --bg: #f5f5f7;
+            --text: #1c1c1e;
+            --muted: rgba(0, 0, 0, 0.52);
+            --card-bg: rgba(255, 255, 255, 0.92);
+            --border: rgba(0, 0, 0, 0.08);
+            --success: #34c759;
+            --error: #ff3b30;
+            --info: #007aff;
+            --warning: #ff9500;
+            --shadow: 0 18px 48px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(255, 191, 36, 0.16), transparent 24%),
+                linear-gradient(180deg, #fff8ef 0%, var(--bg) 32%, #f3f4f6 100%);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 32px 20px 48px;
+        }
+
+        .hero {
+            padding: 28px 30px;
+            border-radius: 28px;
+            background: linear-gradient(135deg, rgba(255, 140, 0, 0.96), rgba(255, 107, 0, 0.92));
+            color: #fff;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            font-size: 34px;
+            margin-bottom: 8px;
+        }
+
+        .hero p {
+            max-width: 760px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.92);
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+
+        .tab {
+            border: 1px solid rgba(255, 140, 0, 0.18);
+            background: rgba(255, 255, 255, 0.85);
+            color: var(--text);
+            border-radius: 999px;
+            padding: 11px 18px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+        }
+
+        .tab:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 140, 0, 0.08);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            color: #fff;
+            border-color: transparent;
+        }
+
+        .panel {
+            display: none;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        .panel-header {
+            margin-bottom: 20px;
+        }
+
+        .panel-header h2 {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+
+        .panel-header p {
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .meta-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.25fr) minmax(360px, 0.95fr);
+            gap: 18px;
+        }
+
+        .stack {
+            display: grid;
+            gap: 16px;
+        }
+
+        .card {
+            padding: 18px;
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.96);
+        }
+
+        .card h3 {
+            font-size: 17px;
+            margin-bottom: 6px;
+        }
+
+        .card p.card-help {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 14px;
+        }
+
+        .form-group {
+            display: grid;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        label {
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            border-radius: 14px;
+            font-size: 14px;
+            background: #fff;
+            color: var(--text);
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: rgba(255, 140, 0, 0.5);
+            box-shadow: 0 0 0 4px rgba(255, 140, 0, 0.12);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 92px;
+            line-height: 1.55;
+        }
+
+        .inline-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .inline-grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        button {
+            border: none;
+            border-radius: 14px;
+            padding: 12px 18px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            color: #fff;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+
+        .btn-danger {
+            background: var(--error);
+            color: #fff;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 140, 0, 0.08);
+            color: var(--accent-dark);
+        }
+
+        .status {
+            margin-top: 14px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .status.success {
+            background: rgba(52, 199, 89, 0.12);
+            color: #1d6f36;
+        }
+
+        .status.error {
+            background: rgba(255, 59, 48, 0.1);
+            color: #a3221a;
+        }
+
+        .status.info {
+            background: rgba(0, 122, 255, 0.1);
+            color: #0a5eb4;
+        }
+
+        .list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .list-item {
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.96);
+        }
+
+        .list-item h4 {
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+
+        .list-item p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        .list-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255, 140, 0, 0.1);
+            color: var(--accent-dark);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .recording-indicator {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            color: var(--error);
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .recording-indicator.active {
+            display: flex;
+        }
+
+        .recording-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--error);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.28; }
+        }
+
+        .muted {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-top: 8px;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent);
+        }
+
+        .mono {
+            font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 1024px) {
+            .meta-layout,
+            .form-grid,
+            .inline-grid-3,
+            .inline-grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <section class="hero">
+            <h1>마케케 업무 자동화</h1>
+            <p>카카오톡 발송, 매크로, 예약 작업, 유틸리티를 한 화면에서 관리합니다.</p>
+        </section>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showPanel('kakao', event)">카카오톡</button>
+            <button class="tab" onclick="showPanel('macro', event)">매크로</button>
+            <button class="tab" onclick="showPanel('schedule', event)">예약 작업</button>
+            <!-- 광고 자동화 임시 주석 처리
+            <button class="tab" onclick="showPanel('meta', event)">메타 광고</button>
+            <button class="tab" onclick="showPanel('youtube', event)">유튜브 광고</button>
+            -->
+            <button class="tab" onclick="showPanel('utility', event)">유틸리티</button>
+        </div>
+
+        <div id="kakao-panel" class="panel active">
+            <div class="panel-header">
+                <h2>카카오톡 자동화</h2>
+                <p>여러 방에 같은 메시지를 일정 간격으로 발송합니다.</p>
+            </div>
+            <div class="form-grid">
+                <div class="card">
+                    <div class="form-group">
+                        <label>방 목록</label>
+                        <input type="text" id="kakao-rooms" placeholder="예: 방1, 방2, 방3">
+                    </div>
+                    <div class="form-group">
+                        <label>메시지</label>
+                        <textarea id="kakao-message" placeholder="발송할 메시지를 입력하세요"></textarea>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="form-group">
+                        <label>발송 간격 (초)</label>
+                        <input type="number" id="kakao-interval" value="3" min="1">
+                    </div>
+                    <div class="actions">
+                        <button class="btn-primary" onclick="sendKakaoMessage()">메시지 발송</button>
+                    </div>
+                </div>
+            </div>
+            <div id="kakao-status"></div>
+        </div>
+
+        <div id="macro-panel" class="panel">
+            <div class="panel-header">
+                <h2>매크로 녹화/재생</h2>
+                <p>반복되는 마우스와 키보드 입력을 녹화하고 다시 실행합니다.</p>
+            </div>
+
+            <div class="recording-indicator" id="recording-indicator">
+                <div class="recording-dot"></div>
+                <span>녹화 중...</span>
+            </div>
+
+            <div class="form-grid">
+                <div class="card">
+                    <div class="form-group">
+                        <label>매크로 이름</label>
+                        <input type="text" id="macro-name" placeholder="예: 네이버 자동 로그인">
+                    </div>
+                    <div class="form-group">
+                        <label>설명</label>
+                        <input type="text" id="macro-desc" placeholder="매크로 설명">
+                    </div>
+                    <div class="actions">
+                        <button class="btn-danger" onclick="startRecording()">녹화 시작</button>
+                        <button class="btn-success" onclick="stopRecording()">녹화 중지</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>저장된 매크로</h3>
+                    <p class="card-help">녹화 후 즉시 목록에서 재생하거나 삭제할 수 있습니다.</p>
+                    <div class="list" id="macro-list">
+                        <div class="list-item"><p>저장된 매크로가 없습니다.</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="macro-status"></div>
+        </div>
+
+        <div id="schedule-panel" class="panel">
+            <div class="panel-header">
+                <h2>예약 작업 관리</h2>
+                <p>기존 매크로 또는 카카오톡 발송을 일정 시간에 실행합니다.</p>
+            </div>
+            <div class="form-grid">
+                <div class="card">
+                    <div class="form-group">
+                        <label>작업 이름</label>
+                        <input type="text" id="schedule-name" placeholder="예: 아침 인사">
+                    </div>
+                    <div class="form-group">
+                        <label>작업 유형</label>
+                        <select id="schedule-type">
+                            <option value="macro">매크로</option>
+                            <option value="kakao">카카오톡 발송</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>대상</label>
+                        <input type="text" id="schedule-target" placeholder="macro.json 또는 방1,방2">
+                    </div>
+                    <div class="form-group hidden" id="schedule-message-group">
+                        <label>메시지</label>
+                        <textarea id="schedule-message"></textarea>
+                    </div>
+                    <div class="inline-grid-3">
+                        <div class="form-group">
+                            <label>시</label>
+                            <input type="number" id="schedule-hour" value="9" min="0" max="23">
+                        </div>
+                        <div class="form-group">
+                            <label>분</label>
+                            <input type="number" id="schedule-minute" value="0" min="0" max="59">
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button class="btn-primary" onclick="addSchedule()">예약 추가</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>예약된 작업</h3>
+                    <p class="card-help">기존 예약 작업 목록입니다.</p>
+                    <div class="list" id="schedule-list">
+                        <div class="list-item"><p>예약된 작업이 없습니다.</p></div>
+                    </div>
+                </div>
+            </div>
+            <div id="schedule-status"></div>
+        </div>
+
+        <div id="meta-panel" class="panel">
+            <div class="panel-header">
+                <h2>메타 광고 자동화</h2>
+                <p>캠페인 설정을 저장해 Meta Marketing API로 생성합니다. 저장 후 즉시 실행하거나 예약 작업으로 반복 실행할 수 있습니다.</p>
+            </div>
+
+            <div class="meta-layout">
+                <div class="stack">
+                    <div class="card">
+                        <h3>Meta API 연결</h3>
+                        <p class="card-help">Meta Marketing API 토큰, 광고계정, 페이지, 인스타 계정을 연결합니다.</p>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>API 버전</label>
+                                <input type="text" id="maa-api-version" value="v22.0" placeholder="예: v22.0">
+                            </div>
+                            <div class="form-group" style="grid-column: span 2;">
+                                <label>Access Token</label>
+                                <input type="password" id="maa-access-token" placeholder="Meta Marketing API access token">
+                            </div>
+                            <div class="form-group">
+                                <label>광고계정</label>
+                                <select id="maa-ad-account-id">
+                                    <option value="">광고계정을 선택하세요</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Facebook 페이지</label>
+                                <select id="maa-page-id">
+                                    <option value="">페이지를 선택하세요</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Instagram 계정</label>
+                                <select id="maa-instagram-user-id">
+                                    <option value="">Instagram 계정 없음</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <button class="btn-primary" id="maa-save-api-btn">API 연결 저장</button>
+                            <button class="btn-secondary" id="maa-load-api-btn">계정 다시 불러오기</button>
+                        </div>
+                        <div id="maa-api-profile" class="chip-row" style="margin-top: 12px;">
+                            <span class="chip">Meta 프로필 미확인</span>
+                        </div>
+                        <div id="maa-api-status"></div>
+                    </div>
+
+                    <div class="card">
+                        <h3>자동화 설정</h3>
+                        <p class="card-help">캠페인 조건, 타게팅, 광고 문구를 저장해 Meta Marketing API 실행 설정으로 만듭니다.</p>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>자동화 이름</label>
+                                <input type="text" id="maa-name" placeholder="예: 봄 프로모션 리드 광고">
+                            </div>
+                            <div class="form-group">
+                                <label>목표</label>
+                                <select id="maa-objective">
+                                    <option value="트래픽">트래픽</option>
+                                    <option value="리드">리드</option>
+                                    <option value="판매">판매</option>
+                                    <option value="참여">참여</option>
+                                    <option value="앱 홍보">앱 홍보</option>
+                                    <option value="브랜드 인지도">브랜드 인지도</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>랜딩 URL</label>
+                                <input type="text" id="maa-landing-url" placeholder="https://example.com/campaign">
+                            </div>
+                            <div class="form-group">
+                                <label>일 예산 (원)</label>
+                                <input type="number" id="maa-daily-budget" value="30000" min="1000" step="1000">
+                            </div>
+                            <div class="form-group">
+                                <label>캠페인 이름</label>
+                                <input type="text" id="maa-campaign-name" placeholder="비워두면 자동 생성">
+                            </div>
+                            <div class="form-group">
+                                <label>광고세트 이름</label>
+                                <input type="text" id="maa-adset-name" placeholder="비워두면 자동 생성">
+                            </div>
+                            <div class="form-group">
+                                <label>광고 이름</label>
+                                <input type="text" id="maa-ad-name" placeholder="비워두면 자동 생성">
+                            </div>
+                            <div class="form-group">
+                                <label>CTA 버튼</label>
+                                <select id="maa-cta">
+                                    <option value="더 알아보기">더 알아보기</option>
+                                    <option value="문의하기">문의하기</option>
+                                    <option value="지금 신청">지금 신청</option>
+                                    <option value="예약하기">예약하기</option>
+                                    <option value="구매하기">구매하기</option>
+                                    <option value="메시지 보내기">메시지 보내기</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Facebook 페이지 이름</label>
+                                <input type="text" id="maa-page-name" placeholder="예: 마케케">
+                            </div>
+                            <div class="form-group">
+                                <label>Instagram 계정 이름</label>
+                                <input type="text" id="maa-instagram-account" placeholder="예: makeke_official">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>타게팅</h3>
+                        <p class="card-help">쉼표로 여러 값을 입력할 수 있습니다. 비워두면 넓은 타게팅으로 진행합니다.</p>
+                        <div class="inline-grid-4">
+                            <div class="form-group">
+                                <label>최소 연령</label>
+                                <input type="number" id="maa-age-min" value="25" min="13" max="65">
+                            </div>
+                            <div class="form-group">
+                                <label>최대 연령</label>
+                                <input type="number" id="maa-age-max" value="55" min="13" max="65">
+                            </div>
+                            <div class="form-group">
+                                <label>성별</label>
+                                <input type="text" id="maa-genders" value="전체" placeholder="전체, 여성, 남성">
+                            </div>
+                            <div class="form-group">
+                                <label>게재위치</label>
+                                <input type="text" id="maa-placements" value="Facebook 피드, Instagram 피드, Instagram 스토리">
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>지역</label>
+                                <textarea id="maa-locations" placeholder="예: 서울, 경기, 부산"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>관심사</label>
+                                <textarea id="maa-interests" placeholder="예: 온라인 마케팅, 소상공인, 광고 자동화"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>광고 문구</h3>
+                        <p class="card-help">Meta 광고 기본 문구, 헤드라인, 설명을 설정합니다.</p>
+                        <div class="form-group">
+                            <label>기본 문구</label>
+                            <textarea id="maa-primary-text" placeholder="예: 클릭 몇 번으로 마케팅 콘텐츠 생성부터 발행까지 끝내세요."></textarea>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>헤드라인</label>
+                                <input type="text" id="maa-headline" placeholder="예: 마케케로 광고 제작 시간을 줄이세요">
+                            </div>
+                            <div class="form-group">
+                                <label>설명</label>
+                                <input type="text" id="maa-creative-description" placeholder="예: 생성, 예약, 발행을 한 번에">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>광고 이미지 URL</label>
+                            <input type="text" id="maa-image-url" placeholder="예: https://.../creative.jpg (비워두면 링크 OG 이미지 활용)">
+                        </div>
+                        <div class="form-group">
+                            <label>추가 메모</label>
+                            <textarea id="maa-notes" placeholder="예: 리드 폼 대신 웹사이트 전환 위주로 세팅"></textarea>
+                        </div>
+                        <div class="checkbox-row">
+                            <input type="checkbox" id="maa-auto-publish">
+                            <label for="maa-auto-publish">최종 검토 후 바로 게시까지 진행</label>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>실행과 예약</h3>
+                        <p class="card-help">저장 후 Meta Marketing API로 바로 생성하거나 예약 작업으로 연결할 수 있습니다.</p>
+                        <div class="actions">
+                            <button class="btn-secondary" id="maa-ai-fill-btn">AI 초안 채우기</button>
+                            <button class="btn-primary" id="maa-save-btn">자동화 저장</button>
+                            <button class="btn-success" id="maa-run-btn">API로 생성</button>
+                            <button class="btn-warning" id="maa-schedule-btn">예약 추가</button>
+                            <button class="btn-secondary" id="maa-reset-btn">입력 초기화</button>
+                        </div>
+                        <div class="inline-grid-4" style="margin-top: 16px;">
+                            <div class="form-group">
+                                <label>예약 이름</label>
+                                <input type="text" id="maa-schedule-name" placeholder="예: 오전 10시 메타 광고">
+                            </div>
+                            <div class="form-group">
+                                <label>트리거 유형</label>
+                                <select id="maa-trigger-type">
+                                    <option value="daily">매일</option>
+                                    <option value="interval">반복 간격</option>
+                                    <option value="once">1회 실행</option>
+                                </select>
+                            </div>
+                            <div class="form-group maa-trigger-daily">
+                                <label>시</label>
+                                <input type="number" id="maa-trigger-hour" value="10" min="0" max="23">
+                            </div>
+                            <div class="form-group maa-trigger-daily">
+                                <label>분</label>
+                                <input type="number" id="maa-trigger-minute" value="0" min="0" max="59">
+                            </div>
+                            <div class="form-group maa-trigger-interval hidden">
+                                <label>반복 간격 (분)</label>
+                                <input type="number" id="maa-trigger-interval" value="60" min="1">
+                            </div>
+                            <div class="form-group maa-trigger-once hidden">
+                                <label>실행 일시</label>
+                                <input type="datetime-local" id="maa-trigger-once">
+                            </div>
+                        </div>
+                        <p class="muted">예약은 저장된 자동화에만 연결됩니다. 실행 시 Meta API로 실제 캠페인 생성 요청을 보냅니다.</p>
+                    </div>
+
+                    <div id="maa-status"></div>
+                </div>
+
+                <div class="stack">
+                    <div class="card">
+                        <h3>최근 Meta 캠페인</h3>
+                        <p class="card-help">연결된 광고계정의 최근 캠페인을 확인합니다.</p>
+                        <div class="list" id="maa-campaign-list">
+                            <div class="list-item"><p>최근 Meta 캠페인이 없습니다.</p></div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>저장된 메타 광고 자동화</h3>
+                        <p class="card-help">저장된 설정을 다시 불러와 수정하거나 삭제할 수 있습니다.</p>
+                        <div class="list" id="maa-config-list">
+                            <div class="list-item"><p>저장된 Meta API 자동화가 없습니다.</p></div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>예약 목록</h3>
+                        <p class="card-help">메타 광고 자동화에 연결된 예약 작업입니다.</p>
+                        <div class="list" id="maa-schedule-list">
+                            <div class="list-item"><p>예약된 Meta API 자동화가 없습니다.</p></div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>최근 실행 로그</h3>
+                        <p class="card-help">최근 수동 실행 또는 예약 실행 결과입니다.</p>
+                        <div class="list" id="maa-run-list">
+                            <div class="list-item"><p>최근 실행 이력이 없습니다.</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="youtube-panel" class="panel">
+            <div class="panel-header">
+                <h2>유튜브 광고 자동화</h2>
+                <p>Google Ads API로 YouTube 광고 캠페인을 생성하고, AI 초안으로 광고 문구와 타게팅을 빠르게 채웁니다.</p>
+            </div>
+
+            <div class="meta-layout">
+                <div class="stack">
+                    <div class="card">
+                        <h3>YouTube Ads API 연결</h3>
+                        <p class="card-help">Google Ads developer token과 OAuth refresh token을 연결합니다.</p>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>API 버전</label>
+                                <input type="text" id="yaa-api-version" value="v19">
+                            </div>
+                            <div class="form-group">
+                                <label>Customer ID</label>
+                                <select id="yaa-customer-id">
+                                    <option value="">고객 계정을 선택하세요</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="grid-column: span 2;">
+                                <label>Developer Token</label>
+                                <input type="password" id="yaa-developer-token" placeholder="Google Ads developer token">
+                            </div>
+                            <div class="form-group">
+                                <label>Client ID</label>
+                                <input type="text" id="yaa-client-id" placeholder="OAuth client id">
+                            </div>
+                            <div class="form-group">
+                                <label>Client Secret</label>
+                                <input type="password" id="yaa-client-secret" placeholder="OAuth client secret">
+                            </div>
+                            <div class="form-group" style="grid-column: span 2;">
+                                <label>Refresh Token</label>
+                                <input type="password" id="yaa-refresh-token" placeholder="OAuth refresh token">
+                            </div>
+                            <div class="form-group">
+                                <label>Login Customer ID</label>
+                                <input type="text" id="yaa-login-customer-id" placeholder="MCC가 있으면 입력">
+                            </div>
+                            <div class="form-group">
+                                <label>채널 ID</label>
+                                <input type="text" id="yaa-channel-id" placeholder="예: UC...">
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <button class="btn-primary" id="yaa-save-api-btn">API 연결 저장</button>
+                            <button class="btn-secondary" id="yaa-load-api-btn">계정 다시 불러오기</button>
+                        </div>
+                        <div id="yaa-api-profile" class="chip-row" style="margin-top: 12px;">
+                            <span class="chip">Google Ads 프로필 미확인</span>
+                        </div>
+                        <div id="yaa-api-status"></div>
+                    </div>
+
+                    <div class="card">
+                        <h3>유튜브 광고 설정</h3>
+                        <p class="card-help">영상 ID, 헤드라인, 타게팅, 예산을 저장해 Google Ads API 실행 설정으로 만듭니다.</p>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>자동화 이름</label>
+                                <input type="text" id="yaa-name" placeholder="예: 봄 시즌 유튜브 조회수 광고">
+                            </div>
+                            <div class="form-group">
+                                <label>목표</label>
+                                <select id="yaa-objective">
+                                    <option value="조회수">조회수</option>
+                                    <option value="트래픽">트래픽</option>
+                                    <option value="전환">전환</option>
+                                    <option value="브랜드 인지도">브랜드 인지도</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>캠페인 이름</label>
+                                <input type="text" id="yaa-campaign-name" placeholder="비워두면 자동 생성">
+                            </div>
+                            <div class="form-group">
+                                <label>광고그룹 이름</label>
+                                <input type="text" id="yaa-ad-group-name" placeholder="비워두면 자동 생성">
+                            </div>
+                            <div class="form-group">
+                                <label>광고 이름</label>
+                                <input type="text" id="yaa-ad-name" placeholder="비워두면 자동 생성">
+                            </div>
+                            <div class="form-group">
+                                <label>YouTube Video ID</label>
+                                <input type="text" id="yaa-video-id" placeholder="예: dQw4w9WgXcQ">
+                            </div>
+                            <div class="form-group">
+                                <label>랜딩 URL</label>
+                                <input type="text" id="yaa-landing-url" placeholder="https://example.com/offer">
+                            </div>
+                            <div class="form-group">
+                                <label>채널 ID 오버라이드</label>
+                                <input type="text" id="yaa-channel-id-config" placeholder="비워두면 API 설정값 사용">
+                            </div>
+                            <div class="form-group">
+                                <label>일 예산 (원)</label>
+                                <input type="number" id="yaa-daily-budget" value="30000" min="1000" step="1000">
+                            </div>
+                            <div class="form-group">
+                                <label>목표 CPM (원)</label>
+                                <input type="number" id="yaa-target-cpm" value="3000" min="100" step="100">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>광고 문구와 AI</h3>
+                        <p class="card-help">YouTube 광고 헤드라인, 설명, 키워드, 오디언스를 AI 초안으로 빠르게 채울 수 있습니다.</p>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>숏 헤드라인</label>
+                                <input type="text" id="yaa-short-headline" placeholder="30자 내외">
+                            </div>
+                            <div class="form-group">
+                                <label>롱 헤드라인</label>
+                                <input type="text" id="yaa-long-headline" placeholder="90자 내외">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>광고 설명</label>
+                            <textarea id="yaa-description" placeholder="예: 반복되는 마케팅 작업을 줄이고 YouTube 광고 운영 속도를 높이세요."></textarea>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>CTA</label>
+                                <select id="yaa-call-to-action">
+                                    <option value="자세히 보기">자세히 보기</option>
+                                    <option value="지금 신청">지금 신청</option>
+                                    <option value="문의하기">문의하기</option>
+                                    <option value="지금 구매">지금 구매</option>
+                                    <option value="예약하기">예약하기</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>운영 메모</label>
+                                <input type="text" id="yaa-notes" placeholder="예: 소상공인 타겟, 무료체험 강조">
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>키워드</label>
+                                <textarea id="yaa-keywords" placeholder="예: 마케팅 자동화, 광고 영상 제작"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>지역</label>
+                                <textarea id="yaa-locations" placeholder="예: 서울, 경기, 부산"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>오디언스</label>
+                            <textarea id="yaa-audiences" placeholder="예: 창업자, 병원 마케터, 소상공인"></textarea>
+                        </div>
+                        <div class="checkbox-row">
+                            <input type="checkbox" id="yaa-auto-publish">
+                            <label for="yaa-auto-publish">최종 검토 후 바로 게시까지 진행</label>
+                        </div>
+                        <div class="actions">
+                            <button class="btn-secondary" id="yaa-ai-fill-btn">AI 초안 채우기</button>
+                            <button class="btn-primary" id="yaa-save-btn">자동화 저장</button>
+                            <button class="btn-success" id="yaa-run-btn">API로 생성</button>
+                            <button class="btn-warning" id="yaa-schedule-btn">예약 추가</button>
+                            <button class="btn-secondary" id="yaa-reset-btn">입력 초기화</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>예약 실행</h3>
+                        <p class="card-help">저장 후 Google Ads API로 바로 생성하거나 예약 작업으로 연결할 수 있습니다.</p>
+                        <div class="inline-grid-4">
+                            <div class="form-group">
+                                <label>예약 이름</label>
+                                <input type="text" id="yaa-schedule-name" placeholder="예: 오전 10시 유튜브 광고">
+                            </div>
+                            <div class="form-group">
+                                <label>트리거 유형</label>
+                                <select id="yaa-trigger-type">
+                                    <option value="daily">매일</option>
+                                    <option value="interval">반복 간격</option>
+                                    <option value="once">1회 실행</option>
+                                </select>
+                            </div>
+                            <div class="form-group yaa-trigger-daily">
+                                <label>시</label>
+                                <input type="number" id="yaa-trigger-hour" value="10" min="0" max="23">
+                            </div>
+                            <div class="form-group yaa-trigger-daily">
+                                <label>분</label>
+                                <input type="number" id="yaa-trigger-minute" value="0" min="0" max="59">
+                            </div>
+                            <div class="form-group yaa-trigger-interval hidden">
+                                <label>반복 간격 (분)</label>
+                                <input type="number" id="yaa-trigger-interval" value="60" min="1">
+                            </div>
+                            <div class="form-group yaa-trigger-once hidden">
+                                <label>실행 일시</label>
+                                <input type="datetime-local" id="yaa-trigger-once">
+                            </div>
+                        </div>
+                        <p class="muted">예약은 저장된 자동화에만 연결됩니다. 실행 시 Google Ads API로 실제 캠페인 생성 요청을 보냅니다.</p>
+                    </div>
+
+                    <div id="yaa-status"></div>
+                </div>
+
+                <div class="stack">
+                    <div class="card">
+                        <h3>최근 YouTube 캠페인</h3>
+                        <p class="card-help">연결된 Google Ads 계정의 최근 캠페인을 확인합니다.</p>
+                        <div class="list" id="yaa-campaign-list">
+                            <div class="list-item"><p>최근 YouTube 캠페인이 없습니다.</p></div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>저장된 유튜브 광고 자동화</h3>
+                        <p class="card-help">저장된 설정을 다시 불러와 수정하거나 삭제할 수 있습니다.</p>
+                        <div class="list" id="yaa-config-list">
+                            <div class="list-item"><p>저장된 YouTube 광고 자동화가 없습니다.</p></div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>예약 목록</h3>
+                        <p class="card-help">유튜브 광고 자동화에 연결된 예약 작업입니다.</p>
+                        <div class="list" id="yaa-schedule-list">
+                            <div class="list-item"><p>예약된 YouTube 광고 자동화가 없습니다.</p></div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>최근 실행 로그</h3>
+                        <p class="card-help">최근 수동 실행 또는 예약 실행 결과입니다.</p>
+                        <div class="list" id="yaa-run-list">
+                            <div class="list-item"><p>최근 실행 이력이 없습니다.</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="utility-panel" class="panel">
+            <div class="panel-header">
+                <h2>유틸리티</h2>
+                <p>빠르게 마우스 위치를 확인하고 스크린샷을 저장하며, Gemini가 현재 화면을 보고 다음 좌표 액션을 제안하게 할 수 있습니다.</p>
+            </div>
+            <div class="form-grid">
+                <div class="card">
+                    <div class="form-group">
+                        <label>마우스 위치 확인</label>
+                        <p class="muted">10초 동안 현재 마우스 좌표를 확인합니다.</p>
+                        <button class="btn-primary" onclick="getMousePosition()">위치 확인 시작</button>
+                        <div id="mouse-position" class="mono" style="margin-top: 12px;"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="form-group">
+                        <label>스크린샷 파일명</label>
+                        <input type="text" id="screenshot-filename" placeholder="비워두면 자동 생성">
+                    </div>
+                    <button class="btn-success" onclick="takeScreenshot()">스크린샷 촬영</button>
+                </div>
+                <div class="card" style="grid-column:1 / -1;">
+                    <div style="display:grid;grid-template-columns:minmax(0,1.2fr) minmax(320px,0.8fr);gap:18px;align-items:start;">
+                        <div>
+                            <div class="form-group">
+                                <label>Gemini 데스크톱 좌표 에이전트</label>
+                                <p class="muted">화면을 분석해 후보 액션, 짧은 시퀀스, 실행 큐를 함께 다룹니다.</p>
+                                <textarea id="desktop-ai-instruction" placeholder="예: 현재 화면에서 로그인 버튼을 찾아줘&#10;예: 검색창이 보이면 마케케를 입력해줘&#10;예: 보이는 창을 닫는 가장 안전한 순서를 제안해줘" onkeydown="desktopAiHandleInstructionKey(event)"></textarea>
+                            </div>
+                            <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-bottom:10px;">
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label style="font-size:11px;margin-bottom:4px;">모니터</label>
+                                    <div id="desktop-ai-display-btns" style="display:flex;gap:0;">
+                                        <button type="button" class="dai-toggle-btn active" data-value="all" onclick="daiToggle('display',this)" style="border-radius:8px 0 0 8px;">전체</button>
+                                    </div>
+                                    <input type="hidden" id="desktop-ai-display" value="all">
+                                </div>
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label style="font-size:11px;margin-bottom:4px;">분석 모드</label>
+                                    <div style="display:flex;gap:0;">
+                                        <button type="button" class="dai-toggle-btn active" data-value="single" onclick="daiToggle('mode',this)" style="border-radius:8px 0 0 8px;">한 단계</button>
+                                        <button type="button" class="dai-toggle-btn" data-value="workflow" onclick="daiToggle('mode',this)" style="border-radius:0 8px 8px 0;">워크플로우</button>
+                                    </div>
+                                    <input type="hidden" id="desktop-ai-mode" value="single">
+                                </div>
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label style="font-size:11px;margin-bottom:4px;">후보</label>
+                                    <div style="display:flex;gap:0;">
+                                        <button type="button" class="dai-toggle-btn" data-value="1" onclick="daiToggle('candidates',this)" style="border-radius:8px 0 0 8px;min-width:32px;">1</button>
+                                        <button type="button" class="dai-toggle-btn" data-value="2" onclick="daiToggle('candidates',this)" style="min-width:32px;">2</button>
+                                        <button type="button" class="dai-toggle-btn active" data-value="3" onclick="daiToggle('candidates',this)" style="min-width:32px;">3</button>
+                                        <button type="button" class="dai-toggle-btn" data-value="4" onclick="daiToggle('candidates',this)" style="min-width:32px;">4</button>
+                                        <button type="button" class="dai-toggle-btn" data-value="5" onclick="daiToggle('candidates',this)" style="border-radius:0 8px 8px 0;min-width:32px;">5</button>
+                                    </div>
+                                    <input type="hidden" id="desktop-ai-max-candidates" value="3">
+                                </div>
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label style="font-size:11px;margin-bottom:4px;">런타임</label>
+                                    <div id="desktop-ai-runtime" class="status info" style="margin-top:0;font-size:11px;">상태 확인 중...</div>
+                                </div>
+                            </div>
+                            <style>
+                                .dai-toggle-btn {
+                                    padding:5px 12px;font-size:11px;font-weight:600;
+                                    border:1px solid rgba(0,0,0,0.12);background:#fff;color:rgba(0,0,0,0.55);
+                                    cursor:pointer;transition:all .15s;white-space:nowrap;
+                                }
+                                .dai-toggle-btn:hover { background:rgba(255,140,0,0.06);color:#ff8c00; }
+                                .dai-toggle-btn.active {
+                                    background:linear-gradient(135deg,#ff8c00,#ff6b00);color:#fff;
+                                    border-color:#ff8c00;box-shadow:0 2px 8px rgba(255,140,0,0.25);
+                                }
+                                .dai-toggle-btn + .dai-toggle-btn { border-left:none; }
+                            </style>
+                            <script>
+                            function daiToggle(group, btn) {
+                                const parent = btn.parentElement;
+                                parent.querySelectorAll('.dai-toggle-btn').forEach(b => b.classList.remove('active'));
+                                btn.classList.add('active');
+                                const val = btn.dataset.value;
+                                if (group === 'display') document.getElementById('desktop-ai-display').value = val;
+                                else if (group === 'mode') document.getElementById('desktop-ai-mode').value = val;
+                                else if (group === 'candidates') document.getElementById('desktop-ai-max-candidates').value = val;
+                            }
+                            </script>
+                            <div class="actions">
+                                <button class="btn-primary" id="desktop-ai-analyze-btn" onclick="desktopAiAnalyze()">화면 분석</button>
+                                <button class="btn-success" id="desktop-ai-execute-btn" onclick="desktopAiExecutePrimary()" disabled>즉시 실행</button>
+                                <button class="btn-secondary" id="desktop-ai-queue-add-btn" onclick="desktopAiQueuePrimary()" disabled>큐 추가</button>
+                                <button class="btn-secondary" id="desktop-ai-sequence-add-btn" onclick="desktopAiQueueSequence()" disabled>시퀀스 담기</button>
+                                <button class="btn-warning" id="desktop-ai-save-preset-btn" onclick="desktopAiSavePreset()">프리셋 저장</button>
+                            </div>
+                            <div id="desktop-ai-status"></div>
+                            <pre id="desktop-ai-plan" class="mono" style="display:none;margin-top:12px;padding:12px;border-radius:12px;background:rgba(0,0,0,0.03);white-space:pre-wrap;word-break:break-word;font-size:11px;line-height:1.6;"></pre>
+                            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px;">
+                                <div style="border:1px solid rgba(0,0,0,0.08);border-radius:14px;padding:12px;background:rgba(0,0,0,0.02);">
+                                    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;">
+                                        <strong>관찰 포인트</strong>
+                                        <span class="muted" style="font-size:12px;">화면 해석</span>
+                                    </div>
+                                    <div id="desktop-ai-observations" class="list">
+                                        <div class="list-item"><p>아직 분석 결과가 없습니다.</p></div>
+                                    </div>
+                                </div>
+                                <div style="border:1px solid rgba(0,0,0,0.08);border-radius:14px;padding:12px;background:rgba(0,0,0,0.02);">
+                                    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;">
+                                        <strong>인식 타깃</strong>
+                                        <span class="muted" style="font-size:12px;">좌표 후보</span>
+                                    </div>
+                                    <div id="desktop-ai-targets" class="list">
+                                        <div class="list-item"><p>아직 인식된 타깃이 없습니다.</p></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="margin-top:12px;border:1px solid rgba(0,0,0,0.08);border-radius:12px;padding:10px;background:rgba(0,0,0,0.02);min-height:180px;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+                                <img id="desktop-ai-preview" alt="Gemini desktop preview" style="display:none;max-width:100%;max-height:320px;border-radius:10px;box-shadow:0 10px 24px rgba(0,0,0,0.08);">
+                                <div id="desktop-ai-preview-empty" class="muted" style="text-align:center;">화면 분석을 실행하면 현재 데스크톱 스냅샷이 여기 보입니다.</div>
+                            </div>
+                        </div>
+                        <div class="stack">
+                            <div style="border:1px solid rgba(0,0,0,0.08);border-radius:16px;padding:14px;background:rgba(255,255,255,0.96);">
+                                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;">
+                                    <strong>후보 액션</strong>
+                                    <button class="btn-secondary" style="padding:8px 10px;font-size:12px;" onclick="desktopAiAnalyze()">새로 분석</button>
+                                </div>
+                                <div id="desktop-ai-candidates" class="list">
+                                    <div class="list-item"><p>후보 액션이 여기에 표시됩니다.</p></div>
+                                </div>
+                            </div>
+                            <div style="border:1px solid rgba(0,0,0,0.08);border-radius:16px;padding:14px;background:rgba(255,255,255,0.96);">
+                                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;">
+                                    <strong>실행 큐</strong>
+                                    <div class="actions" style="gap:6px;">
+                                        <button class="btn-success" style="padding:8px 10px;font-size:12px;" onclick="desktopAiRunQueue(false)">큐 실행</button>
+                                        <button class="btn-secondary" style="padding:8px 10px;font-size:12px;" onclick="desktopAiRunQueue(true)">드라이런</button>
+                                        <button class="btn-danger" style="padding:8px 10px;font-size:12px;" onclick="desktopAiClearQueue()">비우기</button>
+                                    </div>
+                                </div>
+                                <div id="desktop-ai-queue" class="list">
+                                    <div class="list-item"><p>실행 큐가 비어 있습니다.</p></div>
+                                </div>
+                            </div>
+                            <div style="border:1px solid rgba(0,0,0,0.08);border-radius:16px;padding:14px;background:rgba(255,255,255,0.96);">
+                                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;">
+                                    <strong>저장 프리셋</strong>
+                                    <button class="btn-secondary" style="padding:8px 10px;font-size:12px;" onclick="desktopAiLoadPresets()">새로고침</button>
+                                </div>
+                                <div id="desktop-ai-presets" class="list">
+                                    <div class="list-item"><p>저장된 프리셋이 없습니다.</p></div>
+                                </div>
+                            </div>
+                            <div style="border:1px solid rgba(0,0,0,0.08);border-radius:16px;padding:14px;background:rgba(255,255,255,0.96);">
+                                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;">
+                                    <strong>최근 기록</strong>
+                                    <button class="btn-secondary" style="padding:8px 10px;font-size:12px;" onclick="desktopAiLoadHistory()">새로고침</button>
+                                </div>
+                                <div id="desktop-ai-history" class="list">
+                                    <div class="list-item"><p>최근 기록이 없습니다.</p></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="utility-status"></div>
+        </div>
+    </div>
+
+    <script>
+        let isRecording = false;
+        let mouseTracking = false;
+        let desktopAiLastPlan = null;
+        let desktopAiQueue = [];
+        let desktopAiPresets = [];
+        let desktopAiHistory = [];
+        let desktopAiPresetId = 0;
+        let activeMetaConfigId = 0;
+        let metaConfigCache = [];
+
+        function showPanel(panelName, evt) {
+            if (panelName === 'meta' || panelName === 'youtube') return;
+            document.querySelectorAll('.panel').forEach((panel) => panel.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach((tab) => tab.classList.remove('active'));
+            document.getElementById(`${panelName}-panel`).classList.add('active');
+            if (evt?.currentTarget) evt.currentTarget.classList.add('active');
+
+            if (panelName === 'macro') loadMacros();
+            if (panelName === 'schedule') loadSchedules();
+            if (panelName === 'utility') desktopAiLoadData();
+            // 광고 자동화 임시 비활성화
+            // if (panelName === 'meta' && typeof window.maaInit === 'function') window.maaInit();
+            // if (panelName === 'youtube' && typeof window.yaaInit === 'function') window.yaaInit();
+        }
+
+        function showStatus(elementId, message, type = 'info') {
+            const statusEl = document.getElementById(elementId);
+            statusEl.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        async function apiRequest(url, options = {}) {
+            const response = await fetch(url, {
+                method: options.method || 'GET',
+                headers: {'Content-Type': 'application/json', ...(options.headers || {})},
+                body: options.body ? JSON.stringify(options.body) : undefined,
+            });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                throw new Error(data.detail || data.message || '요청 처리에 실패했습니다.');
+            }
+            return data;
+        }
+
+        function splitValues(value) {
+            return String(value || '')
+                .split(/[\n,]/g)
+                .map((item) => item.trim())
+                .filter(Boolean);
+        }
+
+        function escapeHtml(value) {
+            return String(value || '')
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#39;');
+        }
+
+        async function sendKakaoMessage() {
+            const rooms = document.getElementById('kakao-rooms').value.split(',').map((r) => r.trim()).filter(Boolean);
+            const message = document.getElementById('kakao-message').value;
+            const interval = parseInt(document.getElementById('kakao-interval').value, 10);
+            if (!rooms.length || !message.trim()) {
+                showStatus('kakao-status', '방 목록과 메시지를 입력하세요.', 'error');
+                return;
+            }
+            showStatus('kakao-status', '발송 중...', 'info');
+            try {
+                const data = await apiRequest('/api/automation/kakao/send', {method: 'POST', body: {rooms, message, interval}});
+                showStatus('kakao-status', `발송 완료: ${data.success}/${data.total} 성공`, data.success === data.total ? 'success' : 'info');
+            } catch (error) {
+                showStatus('kakao-status', `발송 실패: ${error.message}`, 'error');
+            }
+        }
+
+        async function startRecording() {
+            try {
+                const data = await apiRequest('/api/automation/macro/record/start', {method: 'POST'});
+                if (data.status === 'success') {
+                    isRecording = true;
+                    document.getElementById('recording-indicator').classList.add('active');
+                    showStatus('macro-status', '녹화가 시작되었습니다. 마우스와 키보드 동작을 녹화합니다.', 'info');
+                }
+            } catch (error) {
+                showStatus('macro-status', `녹화 시작 실패: ${error.message}`, 'error');
+            }
+        }
+
+        async function stopRecording() {
+            if (!isRecording) {
+                showStatus('macro-status', '녹화 중이 아닙니다.', 'error');
+                return;
+            }
+            const name = document.getElementById('macro-name').value || `매크로_${Date.now()}`;
+            const description = document.getElementById('macro-desc').value;
+            try {
+                const data = await apiRequest('/api/automation/macro/record/stop', {method: 'POST', body: {name, description}});
+                isRecording = false;
+                document.getElementById('recording-indicator').classList.remove('active');
+                if (data.status === 'success') {
+                    showStatus('macro-status', `매크로 저장 완료: ${data.saved.filepath}`, 'success');
+                    loadMacros();
+                } else {
+                    showStatus('macro-status', '녹화된 이벤트가 없습니다.', 'error');
+                }
+            } catch (error) {
+                showStatus('macro-status', `녹화 중지 실패: ${error.message}`, 'error');
+            }
+        }
+
+        async function loadMacros() {
+            try {
+                const data = await apiRequest('/api/automation/macro/list');
+                const listEl = document.getElementById('macro-list');
+                if (!data.macros.length) {
+                    listEl.innerHTML = '<div class="list-item"><p>저장된 매크로가 없습니다.</p></div>';
+                    return;
+                }
+                listEl.innerHTML = data.macros.map((macro) => `
+                    <div class="list-item">
+                        <h4>${escapeHtml(macro.name)}</h4>
+                        <p>${escapeHtml(macro.description || '설명 없음')} | 이벤트 ${macro.event_count}개 | ${escapeHtml(macro.created_at)}</p>
+                        <div class="list-actions">
+                            <button class="btn-success" onclick="playMacro('${escapeHtml(macro.filename)}')">재생</button>
+                            <button class="btn-danger" onclick="deleteMacro('${escapeHtml(macro.filename)}')">삭제</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                showStatus('macro-status', `목록 조회 실패: ${error.message}`, 'error');
+            }
+        }
+
+        async function playMacro(filename) {
+            showStatus('macro-status', '재생 중...', 'info');
+            try {
+                const data = await apiRequest('/api/automation/macro/play', {method: 'POST', body: {filename, speed: 1.0}});
+                showStatus('macro-status', `재생 완료: ${data.played_events}개 이벤트`, 'success');
+            } catch (error) {
+                showStatus('macro-status', `재생 실패: ${error.message}`, 'error');
+            }
+        }
+
+        async function deleteMacro(filename) {
+            if (!confirm('정말 삭제하시겠습니까?')) return;
+            try {
+                const data = await apiRequest(`/api/automation/macro/${filename}`, {method: 'DELETE'});
+                showStatus('macro-status', data.message, data.status === 'success' ? 'success' : 'error');
+                loadMacros();
+            } catch (error) {
+                showStatus('macro-status', `삭제 실패: ${error.message}`, 'error');
+            }
+        }
+
+        async function addSchedule() {
+            const name = document.getElementById('schedule-name').value;
+            const type = document.getElementById('schedule-type').value;
+            const target = document.getElementById('schedule-target').value;
+            const message = document.getElementById('schedule-message').value;
+            const hour = parseInt(document.getElementById('schedule-hour').value, 10);
+            const minute = parseInt(document.getElementById('schedule-minute').value, 10);
+            if (!name.trim() || !target.trim()) {
+                showStatus('schedule-status', '작업 이름과 대상을 입력하세요.', 'error');
+                return;
+            }
+            try {
+                const data = await apiRequest('/api/automation/schedule', {
+                    method: 'POST',
+                    body: {name, job_type: type, target, message, trigger_type: 'cron', trigger_config: {hour, minute}}
+                });
+                showStatus('schedule-status', data.status === 'success' ? '예약 작업이 추가되었습니다.' : data.message, data.status === 'success' ? 'success' : 'error');
+                if (data.status === 'success') loadSchedules();
+            } catch (error) {
+                showStatus('schedule-status', `추가 실패: ${error.message}`, 'error');
+            }
+        }
+
+        async function loadSchedules() {
+            try {
+                const data = await apiRequest('/api/automation/schedule');
+                const listEl = document.getElementById('schedule-list');
+                if (!data.jobs.length) {
+                    listEl.innerHTML = '<div class="list-item"><p>예약된 작업이 없습니다.</p></div>';
+                    return;
+                }
+                listEl.innerHTML = data.jobs.map((job) => `
+                    <div class="list-item">
+                        <h4>${escapeHtml(job.id)}</h4>
+                        <p>유형 ${escapeHtml(job.type)} | 트리거 ${escapeHtml(job.trigger_type)} | 다음 실행 ${escapeHtml(job.next_run || '없음')}</p>
+                        <div class="list-actions">
+                            <button class="btn-danger" onclick="deleteSchedule('${escapeHtml(job.id)}')">삭제</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                showStatus('schedule-status', `예약 목록 로드 실패: ${error.message}`, 'error');
+            }
+        }
+
+        async function deleteSchedule(jobId) {
+            if (!confirm('정말 삭제하시겠습니까?')) return;
+            try {
+                const data = await apiRequest(`/api/automation/schedule/${jobId}`, {method: 'DELETE'});
+                showStatus('schedule-status', data.message, data.status === 'success' ? 'success' : 'error');
+                loadSchedules();
+            } catch (error) {
+                showStatus('schedule-status', `삭제 실패: ${error.message}`, 'error');
+            }
+        }
+
+        async function getMousePosition() {
+            if (mouseTracking) return;
+            mouseTracking = true;
+            const positionEl = document.getElementById('mouse-position');
+            const tick = async () => {
+                if (!mouseTracking) return;
+                try {
+                    const data = await apiRequest('/api/automation/mouse-position');
+                    positionEl.textContent = `X: ${data.x}, Y: ${data.y}`;
+                } catch (error) {
+                    positionEl.textContent = `오류: ${error.message}`;
+                }
+                setTimeout(tick, 120);
+            };
+            tick();
+            setTimeout(() => { mouseTracking = false; }, 10000);
+        }
+
+        async function takeScreenshot() {
+            const filename = document.getElementById('screenshot-filename').value;
+            try {
+                const data = await apiRequest('/api/automation/screenshot', {method: 'POST', body: {filename}});
+                showStatus('utility-status', `스크린샷 저장: ${data.filename}`, 'success');
+            } catch (error) {
+                showStatus('utility-status', `스크린샷 실패: ${error.message}`, 'error');
+            }
+        }
+
+        function renderDesktopAiPreview(dataUrl) {
+            const img = document.getElementById('desktop-ai-preview');
+            const empty = document.getElementById('desktop-ai-preview-empty');
+            if (!img || !empty) return;
+            if (!dataUrl) {
+                img.style.display = 'none';
+                img.removeAttribute('src');
+                empty.style.display = 'block';
+                return;
+            }
+            img.src = dataUrl;
+            img.style.display = 'block';
+            empty.style.display = 'none';
+        }
+
+        function desktopAiHandleInstructionKey(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                desktopAiAnalyze();
+            }
+        }
+
+        function renderDesktopAiPlan(plan) {
+            const pre = document.getElementById('desktop-ai-plan');
+            if (!pre) return;
+            if (!plan) {
+                pre.style.display = 'none';
+                pre.textContent = '';
+                return;
+            }
+            const action = plan.primary_action || plan.action || {};
+            pre.style.display = 'block';
+            pre.textContent =
+`요약: ${plan.summary || '-'}
+신뢰도: ${plan.confidence || '-'}
+경고: ${plan.warning || '-'}
+액션: ${action.type || 'noop'}
+라벨: ${action.label || '-'}
+좌표: (${action.x || 0}, ${action.y || 0})
+텍스트: ${action.text || '-'}
+키: ${action.key || (action.keys || []).join(' + ') || '-'}
+스크롤: ${action.amount || 0}
+대기: ${action.seconds || 0}
+이동 시간: ${action.duration || 0}
+이유: ${action.reason || '-'}`;
+        }
+
+        function desktopAiRenderObservations(plan) {
+            const list = document.getElementById('desktop-ai-observations');
+            if (!list) return;
+            const observations = plan?.observations || [];
+            if (!observations.length) {
+                list.innerHTML = '<div class="list-item"><p>아직 분석 결과가 없습니다.</p></div>';
+                return;
+            }
+            list.innerHTML = observations.map((item) => `
+                <div class="list-item">
+                    <p>${escapeHtml(item)}</p>
+                </div>
+            `).join('');
+        }
+
+        function desktopAiRenderTargets(plan) {
+            const list = document.getElementById('desktop-ai-targets');
+            if (!list) return;
+            const targets = plan?.targets || [];
+            if (!targets.length) {
+                list.innerHTML = '<div class="list-item"><p>아직 인식된 타깃이 없습니다.</p></div>';
+                return;
+            }
+            list.innerHTML = targets.map((target) => `
+                <div class="list-item">
+                    <h4>${escapeHtml(target.label || '타깃')}</h4>
+                    <p>(${target.x}, ${target.y}) · ${target.width}×${target.height} · ${escapeHtml(target.confidence || 'medium')}</p>
+                    <p>${escapeHtml(target.reason || '')}</p>
+                </div>
+            `).join('');
+        }
+
+        function desktopAiActionSummary(action) {
+            if (!action) return '액션 없음';
+            const text = action.text ? ` · ${action.text.slice(0, 24)}` : '';
+            const key = action.key ? ` · ${action.key}` : '';
+            const keys = (action.keys || []).length ? ` · ${(action.keys || []).join(' + ')}` : '';
+            return `${action.type || 'noop'} (${action.x || 0}, ${action.y || 0})${text}${key}${keys}`;
+        }
+
+        function desktopAiRenderCandidates() {
+            const list = document.getElementById('desktop-ai-candidates');
+            if (!list) return;
+            const candidates = desktopAiLastPlan?.candidate_actions || [];
+            if (!candidates.length) {
+                list.innerHTML = '<div class="list-item"><p>후보 액션이 여기에 표시됩니다.</p></div>';
+                return;
+            }
+            list.innerHTML = candidates.map((action, index) => `
+                <div class="list-item">
+                    <h4>${index === 0 ? '주 추천 액션' : `후보 ${index + 1}`}</h4>
+                    <p>${escapeHtml(desktopAiActionSummary(action))}</p>
+                    <p>${escapeHtml(action.reason || '')}</p>
+                    <div class="list-actions">
+                        <button class="btn-secondary" onclick="desktopAiQueueCandidate(${index})">큐 추가</button>
+                        <button class="btn-success" onclick="desktopAiExecuteCandidate(${index})">실행</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function desktopAiRenderQueue() {
+            const list = document.getElementById('desktop-ai-queue');
+            if (!list) return;
+            if (!desktopAiQueue.length) {
+                list.innerHTML = '<div class="list-item"><p>실행 큐가 비어 있습니다.</p></div>';
+                return;
+            }
+            list.innerHTML = desktopAiQueue.map((action, index) => `
+                <div class="list-item">
+                    <h4>${index + 1}. ${escapeHtml(action.label || action.type || '액션')}</h4>
+                    <p>${escapeHtml(desktopAiActionSummary(action))}</p>
+                    <p>${escapeHtml(action.reason || '')}</p>
+                    <div class="list-actions">
+                        <button class="btn-danger" onclick="desktopAiRemoveQueueItem(${index})">삭제</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function desktopAiRenderPresets() {
+            const list = document.getElementById('desktop-ai-presets');
+            if (!list) return;
+            if (!desktopAiPresets.length) {
+                list.innerHTML = '<div class="list-item"><p>저장된 프리셋이 없습니다.</p></div>';
+                return;
+            }
+            list.innerHTML = desktopAiPresets.map((preset) => `
+                <div class="list-item">
+                    <h4>${escapeHtml(preset.name || '프리셋')}</h4>
+                    <p>${escapeHtml((preset.instruction || '').slice(0, 120) || '-')}</p>
+                    <p>사용 ${preset.use_count || 0}회 · 최근 사용 ${escapeHtml(preset.last_used_at || '없음')}</p>
+                    <div class="list-actions">
+                        <button class="btn-secondary" onclick="desktopAiApplyPreset(${preset.id})">불러오기</button>
+                        <button class="btn-danger" onclick="desktopAiDeletePreset(${preset.id})">삭제</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function desktopAiRenderHistory() {
+            const list = document.getElementById('desktop-ai-history');
+            if (!list) return;
+            if (!desktopAiHistory.length) {
+                list.innerHTML = '<div class="list-item"><p>최근 기록이 없습니다.</p></div>';
+                return;
+            }
+            list.innerHTML = desktopAiHistory.map((item) => {
+                const result = item.result_json || {};
+                const plan = result.plan || {};
+                const action = plan.primary_action || plan.action || result.results?.[0]?.action || {};
+                return `
+                    <div class="list-item">
+                        <h4>${escapeHtml(item.kind || 'history')} · ${escapeHtml(item.status || 'success')}</h4>
+                        <p>${escapeHtml(item.instruction || desktopAiActionSummary(action) || '-')}</p>
+                        <p>${escapeHtml(item.created_at || '')}</p>
+                        <div class="list-actions">
+                            <button class="btn-secondary" onclick="desktopAiReuseHistory(${item.id})">다시 쓰기</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function desktopAiLoadStatus() {
+            try {
+                const data = await apiRequest('/api/automation/desktop-agent/status');
+                const el = document.getElementById('desktop-ai-runtime');
+                const displayBtnWrap = document.getElementById('desktop-ai-display-btns');
+                const displayHidden = document.getElementById('desktop-ai-display');
+                if (displayBtnWrap) {
+                    const current = displayHidden?.value || 'all';
+                    const displays = (data.displays || []);
+                    const items = displays.length
+                        ? displays.map(d => ({ value: String(d.id), label: d.name || d.id }))
+                        : [{ value: 'all', label: '전체' }];
+                    displayBtnWrap.innerHTML = items.map((d, i) => {
+                        const isActive = d.value === current || (!displays.some(x => String(x.id) === current) && i === 0);
+                        const radius = items.length === 1 ? '8px' : i === 0 ? '8px 0 0 8px' : i === items.length - 1 ? '0 8px 8px 0' : '0';
+                        return `<button type="button" class="dai-toggle-btn${isActive ? ' active' : ''}" data-value="${d.value}" onclick="daiToggle('display',this)" style="border-radius:${radius};">${d.label}</button>`;
+                    }).join('');
+                    if (displayHidden) displayHidden.value = displayBtnWrap.querySelector('.active')?.dataset.value || 'all';
+                }
+                if (el) {
+                    const importOk = data.available ? 'success' : 'error';
+                    el.className = `status ${importOk}`;
+                    el.textContent = data.available
+                        ? `준비됨 · 프리셋 ${data.preset_count} · 기록 ${data.history_count}`
+                        : `준비 안 됨 · ${Object.values(data.import_errors || {})[0] || 'AutoController unavailable'}`;
+                }
+            } catch (error) {
+                const el = document.getElementById('desktop-ai-runtime');
+                if (el) {
+                    el.className = 'status error';
+                    el.textContent = `상태 확인 실패: ${error.message}`;
+                }
+            }
+        }
+
+        async function desktopAiLoadPresets() {
+            try {
+                const data = await apiRequest('/api/automation/desktop-agent/presets');
+                desktopAiPresets = data.presets || [];
+                desktopAiRenderPresets();
+            } catch (error) {
+                showStatus('utility-status', `프리셋 로드 실패: ${error.message}`, 'error');
+            }
+        }
+
+        async function desktopAiLoadHistory() {
+            try {
+                const data = await apiRequest('/api/automation/desktop-agent/history?limit=12');
+                desktopAiHistory = data.history || [];
+                desktopAiRenderHistory();
+            } catch (error) {
+                showStatus('utility-status', `기록 로드 실패: ${error.message}`, 'error');
+            }
+        }
+
+        function desktopAiLoadData() {
+            desktopAiLoadStatus();
+            desktopAiLoadPresets();
+            desktopAiLoadHistory();
+        }
+
+        function desktopAiQueuePush(action) {
+            if (!action || !action.type) return;
+            desktopAiQueue.push({...action});
+            desktopAiRenderQueue();
+            showStatus('utility-status', `큐에 추가됨: ${desktopAiActionSummary(action)}`, 'info');
+        }
+
+        function desktopAiQueueCandidate(index) {
+            const action = (desktopAiLastPlan?.candidate_actions || [])[index];
+            if (!action) return;
+            desktopAiQueuePush(action);
+        }
+
+        function desktopAiExecuteCandidate(index) {
+            const action = (desktopAiLastPlan?.candidate_actions || [])[index];
+            if (!action) return;
+            desktopAiExecuteAction(action);
+        }
+
+        function desktopAiQueuePrimary() {
+            const action = desktopAiLastPlan?.primary_action || desktopAiLastPlan?.action;
+            if (!action || action.type === 'noop') {
+                showStatus('utility-status', '큐에 담을 추천 액션이 없습니다.', 'error');
+                return;
+            }
+            desktopAiQueuePush(action);
+        }
+
+        function desktopAiQueueSequence() {
+            const sequence = desktopAiLastPlan?.suggested_sequence || [];
+            if (!sequence.length) {
+                showStatus('utility-status', '담을 시퀀스가 없습니다. 워크플로우 모드로 다시 분석해보세요.', 'error');
+                return;
+            }
+            sequence.forEach((action) => desktopAiQueue.push({...action}));
+            desktopAiRenderQueue();
+            showStatus('utility-status', `시퀀스 ${sequence.length}개를 큐에 담았습니다.`, 'success');
+        }
+
+        function desktopAiRemoveQueueItem(index) {
+            desktopAiQueue.splice(index, 1);
+            desktopAiRenderQueue();
+        }
+
+        function desktopAiClearQueue() {
+            desktopAiQueue = [];
+            desktopAiRenderQueue();
+        }
+
+        async function desktopAiAnalyze() {
+            const instruction = document.getElementById('desktop-ai-instruction')?.value?.trim();
+            const analyzeBtn = document.getElementById('desktop-ai-analyze-btn');
+            const executeBtn = document.getElementById('desktop-ai-execute-btn');
+            const queueBtn = document.getElementById('desktop-ai-queue-add-btn');
+            const sequenceBtn = document.getElementById('desktop-ai-sequence-add-btn');
+            const mode = document.getElementById('desktop-ai-mode')?.value || 'single';
+            const maxCandidates = parseInt(document.getElementById('desktop-ai-max-candidates')?.value || '3', 10) || 3;
+            const displayId = document.getElementById('desktop-ai-display')?.value || 'all';
+            if (!instruction) {
+                showStatus('utility-status', 'Gemini에게 시킬 명령을 입력하세요.', 'error');
+                return;
+            }
+            desktopAiLastPlan = null;
+            executeBtn.disabled = true;
+            queueBtn.disabled = true;
+            sequenceBtn.disabled = true;
+            analyzeBtn.disabled = true;
+            analyzeBtn.textContent = '분석 중...';
+            renderDesktopAiPlan(null);
+            desktopAiRenderObservations(null);
+            desktopAiRenderTargets(null);
+            desktopAiRenderCandidates();
+            showStatus('utility-status', '현재 화면을 캡처하고 Gemini에 다음 한 단계 액션을 요청하고 있습니다.', 'info');
+            try {
+                const data = await apiRequest('/api/automation/desktop-agent/analyze', {
+                    method: 'POST',
+                    body: {
+                        instruction,
+                        mode,
+                        max_candidates: Math.max(1, Math.min(maxCandidates, 5)),
+                        display_id: displayId,
+                        preset_id: desktopAiPresetId,
+                    }
+                });
+                desktopAiLastPlan = data.plan || null;
+                renderDesktopAiPlan(desktopAiLastPlan);
+                desktopAiRenderObservations(desktopAiLastPlan);
+                desktopAiRenderTargets(desktopAiLastPlan);
+                desktopAiRenderCandidates();
+                renderDesktopAiPreview(data.preview_data_url || '');
+                const primaryAction = desktopAiLastPlan?.primary_action || desktopAiLastPlan?.action;
+                executeBtn.disabled = !primaryAction || primaryAction.type === 'noop';
+                queueBtn.disabled = executeBtn.disabled;
+                sequenceBtn.disabled = !(desktopAiLastPlan?.suggested_sequence || []).length;
+                const tone = desktopAiLastPlan?.confidence === 'high'
+                    ? 'success'
+                    : (desktopAiLastPlan?.confidence === 'medium' ? 'info' : 'warning');
+                showStatus(
+                    'utility-status',
+                    `제안 액션: ${(desktopAiLastPlan?.primary_action || desktopAiLastPlan?.action)?.type || 'noop'}${desktopAiLastPlan?.warning ? ` · 주의: ${desktopAiLastPlan.warning}` : ''}`,
+                    tone
+                );
+                desktopAiLoadStatus();
+                desktopAiLoadHistory();
+            } catch (error) {
+                renderDesktopAiPreview('');
+                showStatus('utility-status', `Gemini 데스크톱 분석 실패: ${error.message}`, 'error');
+            } finally {
+                analyzeBtn.disabled = false;
+                analyzeBtn.textContent = '화면 분석';
+            }
+        }
+
+        async function desktopAiExecuteAction(action) {
+            if (!action || action.type === 'noop') {
+                showStatus('utility-status', '실행할 액션이 없습니다.', 'error');
+                return;
+            }
+            if (!confirm(`제안 액션을 실행할까요?\n\n${action.type}${action.reason ? `\n- ${action.reason}` : ''}`)) return;
+            showStatus('utility-status', `제안 액션 ${action.type} 실행 중...`, 'info');
+            try {
+                const data = await apiRequest('/api/automation/desktop-agent/execute', {
+                    method: 'POST',
+                    body: {
+                        instruction: document.getElementById('desktop-ai-instruction')?.value?.trim() || '',
+                        action,
+                        preset_id: desktopAiPresetId,
+                    }
+                });
+                showStatus('utility-status', `실행 완료: ${data.message || action.type}`, data.executed_count ? 'success' : 'info');
+                desktopAiLoadStatus();
+                desktopAiLoadHistory();
+            } catch (error) {
+                showStatus('utility-status', `실행 실패: ${error.message}`, 'error');
+            }
+        }
+
+        async function desktopAiExecutePrimary() {
+            const executeBtn = document.getElementById('desktop-ai-execute-btn');
+            const action = desktopAiLastPlan?.primary_action || desktopAiLastPlan?.action;
+            if (!action || action.type === 'noop') {
+                showStatus('utility-status', '실행할 제안 액션이 없습니다. 먼저 화면 분석을 실행하세요.', 'error');
+                executeBtn.disabled = true;
+                return;
+            }
+            executeBtn.disabled = true;
+            executeBtn.textContent = '실행 중...';
+            try {
+                await desktopAiExecuteAction(action);
+            } catch (error) {
+                showStatus('utility-status', `실행 실패: ${error.message}`, 'error');
+            } finally {
+                executeBtn.disabled = false;
+                executeBtn.textContent = '즉시 실행';
+            }
+        }
+
+        async function desktopAiRunQueue(dryRun = false) {
+            if (!desktopAiQueue.length) {
+                showStatus('utility-status', '실행 큐가 비어 있습니다.', 'error');
+                return;
+            }
+            const label = dryRun ? '드라이런' : '큐 실행';
+            showStatus('utility-status', `${label} 준비 중...`, 'info');
+            try {
+                const data = await apiRequest('/api/automation/desktop-agent/execute', {
+                    method: 'POST',
+                    body: {
+                        instruction: document.getElementById('desktop-ai-instruction')?.value?.trim() || '',
+                        actions: desktopAiQueue,
+                        dry_run: !!dryRun,
+                        stop_on_error: true,
+                        preset_id: desktopAiPresetId,
+                    }
+                });
+                showStatus(
+                    'utility-status',
+                    `${label} 완료: ${data.executed_count}/${data.total_steps} 실행${data.error_count ? ` · 오류 ${data.error_count}` : ''}`,
+                    data.error_count ? 'warning' : 'success'
+                );
+                if (!dryRun && !data.error_count) desktopAiClearQueue();
+                desktopAiLoadStatus();
+                desktopAiLoadHistory();
+            } catch (error) {
+                showStatus('utility-status', `${label} 실패: ${error.message}`, 'error');
+            }
+        }
+
+        async function desktopAiSavePreset() {
+            const instruction = document.getElementById('desktop-ai-instruction')?.value?.trim();
+            if (!instruction) {
+                showStatus('utility-status', '프리셋으로 저장할 명령을 입력하세요.', 'error');
+                return;
+            }
+            const name = prompt('프리셋 이름을 입력하세요.', instruction.slice(0, 24));
+            if (!name || !name.trim()) return;
+            try {
+                await apiRequest('/api/automation/desktop-agent/presets', {
+                    method: 'POST',
+                    body: {name: name.trim(), instruction, notes: ''}
+                });
+                showStatus('utility-status', '프리셋 저장 완료', 'success');
+                desktopAiLoadPresets();
+                desktopAiLoadStatus();
+            } catch (error) {
+                showStatus('utility-status', `프리셋 저장 실패: ${error.message}`, 'error');
+            }
+        }
+
+        function desktopAiApplyPreset(presetId) {
+            const preset = desktopAiPresets.find((item) => item.id === presetId);
+            if (!preset) return;
+            desktopAiPresetId = presetId;
+            document.getElementById('desktop-ai-instruction').value = preset.instruction || '';
+            showStatus('utility-status', `프리셋 적용: ${preset.name}`, 'success');
+        }
+
+        async function desktopAiDeletePreset(presetId) {
+            if (!confirm('이 프리셋을 삭제할까요?')) return;
+            try {
+                await apiRequest(`/api/automation/desktop-agent/presets/${presetId}`, {method: 'DELETE'});
+                if (desktopAiPresetId === presetId) desktopAiPresetId = 0;
+                desktopAiLoadPresets();
+                desktopAiLoadStatus();
+            } catch (error) {
+                showStatus('utility-status', `프리셋 삭제 실패: ${error.message}`, 'error');
+            }
+        }
+
+        function desktopAiReuseHistory(historyId) {
+            const history = desktopAiHistory.find((item) => item.id === historyId);
+            if (!history) return;
+            const result = history.result_json || {};
+            const payload = history.payload_json || {};
+            const plan = result.plan || {};
+            const action = plan.primary_action || plan.action || result.results?.[0]?.action;
+            document.getElementById('desktop-ai-instruction').value = history.instruction || payload.instruction || '';
+            if (action) {
+                desktopAiLastPlan = {
+                    summary: plan.summary || history.instruction || '히스토리에서 불러온 액션',
+                    confidence: plan.confidence || 'medium',
+                    warning: plan.warning || '',
+                    observations: plan.observations || [],
+                    targets: plan.targets || [],
+                    primary_action: action,
+                    candidate_actions: plan.candidate_actions || [action],
+                    suggested_sequence: plan.suggested_sequence || [],
+                    action,
+                };
+                renderDesktopAiPlan(desktopAiLastPlan);
+                desktopAiRenderObservations(desktopAiLastPlan);
+                desktopAiRenderTargets(desktopAiLastPlan);
+                desktopAiRenderCandidates();
+                document.getElementById('desktop-ai-execute-btn').disabled = action.type === 'noop';
+                document.getElementById('desktop-ai-queue-add-btn').disabled = action.type === 'noop';
+                document.getElementById('desktop-ai-sequence-add-btn').disabled = !((desktopAiLastPlan?.suggested_sequence || []).length);
+            }
+            showStatus('utility-status', '최근 기록을 다시 불러왔습니다.', 'info');
+        }
+
+        // 광고 자동화 임시 비활성화
+        // function loadMetaAdsData() {
+        //     if (typeof window.maaInit === 'function') {
+        //         return window.maaInit();
+        //     }
+        // }
+
+        // function loadYouTubeAdsData() {
+        //     if (typeof window.yaaInit === 'function') {
+        //         return window.yaaInit();
+        //     }
+        // }
+
+        function syncMetaScheduleFields() {
+            const triggerType = document.getElementById('maa-trigger-type')?.value || 'daily';
+            document.querySelectorAll('.maa-trigger-daily').forEach((el) => el.classList.toggle('hidden', triggerType !== 'daily'));
+            document.querySelectorAll('.maa-trigger-interval').forEach((el) => el.classList.toggle('hidden', triggerType !== 'interval'));
+            document.querySelectorAll('.maa-trigger-once').forEach((el) => el.classList.toggle('hidden', triggerType !== 'once'));
+        }
+
+        document.getElementById('schedule-type')?.addEventListener('change', function() {
+            document.getElementById('schedule-message-group').classList.toggle('hidden', this.value !== 'kakao');
+        });
+
+        syncMetaScheduleFields();
+    </script>
+    <!-- 광고 자동화 임시 주석 처리
+    <script src="/static/modules/meta_ads_auto.js"></script>
+    <script src="/static/modules/youtube_ads_auto.js"></script>
+    -->
+</body>
+</html>

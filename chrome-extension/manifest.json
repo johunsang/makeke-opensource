@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "마케케",
+  "version": "2.3.0",
+  "description": "마케케 마케팅 자동화 브라우저 확장",
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "scripting",
+    "storage",
+    "alarms",
+    "identity",
+    "identity.email"
+  ],
+  "optional_permissions": [
+    "debugger"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "마케케",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}

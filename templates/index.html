@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Writer Auto</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+<div class="toast-container" id="toast-container"></div>
+<div class="container">
+    <div class="header">
+        <h1>Writer Auto</h1>
+        <button class="theme-toggle" id="theme-toggle" title="다크모드 전환">&#9790;</button>
+    </div>
+    <p class="subtitle">나만의 스타일로 글 쓰기</p>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="tab-collect">내 글 수집</button>
+        <button class="tab-btn" data-tab="tab-style">스타일 분석</button>
+        <button class="tab-btn" data-tab="tab-write">글 쓰기</button>
+        <button class="tab-btn" data-tab="tab-settings">설정</button>
+    </div>
+
+    <!-- Tab 1: 글 수집 -->
+    <div id="tab-collect" class="tab-panel active">
+        <div class="card">
+            <h3>블로그 전체 수집</h3>
+            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">설정에서 저장한 아이디로 전체 글을 한번에 수집합니다.</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button class="btn btn-primary" id="btn-naver" onclick="crawlPlatform('naver')">네이버</button>
+                <button class="btn btn-secondary" id="btn-tistory" onclick="crawlPlatform('tistory')">티스토리</button>
+                <button class="btn btn-secondary" id="btn-brunch" onclick="crawlPlatform('brunch')">브런치</button>
+                <button class="btn btn-secondary" id="btn-velog" onclick="crawlPlatform('velog')">벨로그</button>
+                <button class="btn btn-secondary" id="btn-threads" onclick="crawlPlatform('threads')">스레드</button>
+            </div>
+            <div id="crawl-progress" style="margin-top:12px;display:none">
+                <div style="background:var(--progress-bg);border-radius:6px;height:8px;overflow:hidden">
+                    <div id="crawl-bar" style="background:var(--accent);height:100%;width:0%"></div>
+                </div>
+                <p id="crawl-status" style="font-size:13px;color:var(--text-secondary);margin-top:6px"></p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>글 추가</h3>
+            <div class="toggle-group">
+                <button class="toggle-btn active" data-mode="manual">직접 입력</button>
+                <button class="toggle-btn" data-mode="url">URL 수집</button>
+            </div>
+
+            <div id="manual-form">
+                <input type="text" id="manual-title" placeholder="글 제목">
+                <textarea id="manual-content" placeholder="본문을 붙여넣으세요..." rows="6"></textarea>
+                <button class="btn btn-primary" id="btn-manual" onclick="submitManual()">저장</button>
+            </div>
+
+            <div id="url-form" style="display:none">
+                <input type="url" id="url-input" placeholder="https://blog.example.com/my-post">
+                <button class="btn btn-primary" id="btn-url" onclick="submitUrl()">수집</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>수집된 글</h3>
+            <ul class="article-list" id="article-list">
+                <div class="empty-state">아직 수집된 글이 없습니다.</div>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Tab 2: 스타일 분석 -->
+    <div id="tab-style" class="tab-panel">
+        <div class="card" style="text-align:center">
+            <p style="margin-bottom:16px;color:var(--text-secondary)">수집된 글을 바탕으로 문체를 분석합니다.</p>
+            <button class="btn btn-primary" id="btn-analyze" onclick="analyzeStyle()">내 스타일 분석하기</button>
+        </div>
+        <div id="style-result"></div>
+    </div>
+
+    <!-- Tab 3: 글 쓰기 -->
+    <div id="tab-write" class="tab-panel">
+        <div class="card">
+            <h3>새 글 생성</h3>
+            <input type="text" id="gen-topic" placeholder="주제 (예: 주니어 개발자가 성장하는 법)">
+            <input type="text" id="gen-keywords" placeholder="키워드 (쉼표로 구분, 선택사항)">
+            <select id="gen-length">
+                <option value="short">짧게 (300~500자)</option>
+                <option value="medium" selected>보통 (800~1200자)</option>
+                <option value="long">길게 (1500~2000자)</option>
+            </select>
+            <div style="display:flex;gap:8px">
+                <button class="btn btn-primary" id="btn-generate" onclick="generateArticle()">글 생성</button>
+                <button class="btn btn-secondary" onclick="copyOutput()">복사</button>
+                <button class="btn btn-secondary" onclick="downloadOutput()">다운로드</button>
+            </div>
+        </div>
+        <div class="output-area" id="gen-output"></div>
+    </div>
+    <!-- Tab 4: 설정 -->
+    <div id="tab-settings" class="tab-panel">
+        <div class="card">
+            <h3>블로그 설정</h3>
+
+            <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">네이버 블로그</label>
+            <input type="text" id="setting-naver-id" placeholder="myblogid (blog.naver.com/myblogid)">
+            <p style="font-size:12px;color:var(--text-secondary);margin-top:-8px;margin-bottom:16px">blog.naver.com/ 뒤에 오는 아이디</p>
+
+            <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">티스토리</label>
+            <input type="text" id="setting-tistory-id" placeholder="myblog (myblog.tistory.com)">
+            <p style="font-size:12px;color:var(--text-secondary);margin-top:-8px;margin-bottom:16px">tistory.com 앞의 서브도메인</p>
+
+            <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">브런치</label>
+            <input type="text" id="setting-brunch-id" placeholder="myid (brunch.co.kr/@myid)">
+            <p style="font-size:12px;color:var(--text-secondary);margin-top:-8px;margin-bottom:16px">@ 뒤에 오는 아이디</p>
+
+            <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">벨로그</label>
+            <input type="text" id="setting-velog-id" placeholder="myname (velog.io/@myname)">
+            <p style="font-size:12px;color:var(--text-secondary);margin-top:-8px;margin-bottom:16px">@ 뒤에 오는 유저네임</p>
+
+            <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">스레드(Threads)</label>
+            <input type="text" id="setting-threads-id" placeholder="myname (threads.net/@myname)">
+            <p style="font-size:12px;color:var(--text-secondary);margin-top:-8px;margin-bottom:16px">@ 뒤에 오는 유저네임</p>
+
+            <button class="btn btn-primary" id="btn-save-settings" onclick="saveSettings()">저장</button>
+        </div>
+        <div class="card">
+            <h3>데이터 관리</h3>
+            <button class="btn btn-danger" onclick="resetAll()">모든 글 초기화</button>
+        </div>
+    </div>
+</div>
+<script src="/static/app.js"></script>
+</body>
+</html>
